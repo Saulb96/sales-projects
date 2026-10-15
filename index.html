@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M1S · Sales Projects</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://alcdn.msauth.net">
+<style>
+:root{
+  --ink:#16202c; --muted:#5f6c7d; --faint:#8b97a6;
+  --glass:rgba(255,255,255,.62); --edge:rgba(255,255,255,.75);
+  --shadow:0 8px 32px rgba(31,45,75,.12);
+  --accentink:#1b6fae; --sel:#1b6fae; --grid:rgba(95,108,125,.16);
+  --good:#2f7d4f; --good-soft:rgba(63,125,88,.15);
+  --warn:#9a6b2f; --warn-soft:rgba(154,107,47,.13);
+  --bad:#b4452f; --bad-soft:rgba(180,69,47,.12);
+  --ring:rgba(47,155,214,.18);
+  --pcols:minmax(250px,1.7fr) 150px minmax(170px,.9fr) minmax(150px,1.3fr) 72px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.45;color:var(--ink);
+  background:linear-gradient(135deg,#e8f0fa 0%,#f3eef9 45%,#eaf6f1 100%);background-attachment:fixed;-webkit-font-smoothing:antialiased}
+#flow{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer;color:inherit}
+a{color:var(--accentink)}
+.card{background:var(--glass);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  border:1px solid var(--edge);border-radius:18px;box-shadow:var(--shadow)}
+.card-hd{padding:11px 16px;border-bottom:1px solid var(--grid);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-hd h2{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:10px 18px;flex:0 0 auto;background:var(--glass);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  border-bottom:1px solid var(--edge);box-shadow:0 2px 14px rgba(31,45,75,.06)}
+.brand{font-weight:700;font-size:15px;white-space:nowrap}
+.spacer{flex:1}
+.who{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.who b{color:var(--ink);font-weight:600}
+.role{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-left:6px;
+  background:rgba(95,108,125,.12);color:var(--muted)}
+.role.adm{background:rgba(47,155,214,.15);color:var(--accentink)}
+.role.ed{background:var(--good-soft);color:var(--good)}
+.save{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.save.ok{color:var(--good);font-weight:600}
+.save.err{color:var(--bad);font-weight:700;cursor:pointer}
+
+.btn{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:11px;border:1px solid var(--edge);
+  background:rgba(255,255,255,.75);color:var(--ink);white-space:nowrap}
+.btn:hover{background:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{color:#fff;background:linear-gradient(135deg,#2f9bd6,#1b6fae)}
+.btn.danger{color:#fff;background:linear-gradient(135deg,#d0634c,#b4452f)}
+.btn.sm{padding:6px 10px;font-size:11.5px}
+.btn.xs{padding:3px 9px;font-size:11px;border-radius:9px}
+.btn.del{color:var(--bad)}
+.icon{border:none;background:none;padding:3px 6px;border-radius:7px;color:var(--muted);font-size:12px;line-height:1}
+.icon:hover:not(:disabled){background:rgba(255,255,255,.9);color:var(--bad)}
+.icon.mv:hover:not(:disabled){color:var(--accentink)}
+.icon:disabled{opacity:.25;cursor:default}
+input,select,textarea{font-family:inherit;font-size:13px;color:var(--ink);background:rgba(255,255,255,.8);
+  border:1px solid var(--edge);border-radius:11px;padding:8px 12px;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{background:#fff;box-shadow:0 0 0 3px var(--ring)}
+input:disabled,select:disabled,textarea:disabled{color:var(--ink);opacity:.8;cursor:default}
+input[type=checkbox]{width:15px;height:15px;padding:0;cursor:pointer;accent-color:#1b6fae;flex:0 0 auto}
+textarea{resize:vertical;line-height:1.4}
+label.fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+label.fld>span{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hint{font-size:11.5px;color:var(--muted)}
+.hint.warn{color:var(--warn)}
+.err{font-size:12px;color:var(--bad);min-height:16px}
+.seg{position:relative;display:flex;border:1px solid var(--edge);border-radius:999px;background:rgba(233,239,247,.85);padding:2px;flex:0 0 auto}
+.seg button{font-size:11.5px;font-weight:600;padding:6px 13px;border:0;background:none;color:var(--muted);border-radius:999px;white-space:nowrap;transition:color .15s,background .15s}
+.seg button.on{background:#fff;color:var(--accentink);box-shadow:0 1px 4px rgba(31,45,75,.15)}
+.seg button:hover:not(.on){color:var(--ink)}
+.search{font-size:13px;padding:8px 12px;border-radius:11px;width:230px}
+
+.main{flex:1;overflow:auto;padding:16px 20px 40px}
+.outer{max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.phead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.phead h1{font-size:20px;font-weight:700;letter-spacing:-.3px;white-space:nowrap}
+.ph-sub{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.phead.hide{display:none}
+#view{display:flex;flex-direction:column;gap:14px}
+.banner{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:14px;background:var(--warn-soft);
+  border:1px solid var(--edge);color:var(--warn);font-size:12.5px;flex-wrap:wrap}
+.banner.bad{background:var(--bad-soft);color:var(--bad)}
+.banner.info{background:rgba(47,155,214,.1);color:var(--accentink)}
+.backlink{align-self:flex-start;font-size:13px;font-weight:600;color:var(--accentink);text-decoration:none}
+.backlink:hover{text-decoration:underline}
+.empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.empty b{color:var(--ink);font-size:15px}
+.inline-load{display:flex;align-items:center;gap:9px;padding:6px;color:var(--muted);font-size:12.5px;justify-content:center}
+.spin{width:15px;height:15px;border:2px solid var(--ring);border-top-color:var(--accentink);border-radius:50%;animation:sp .8s linear infinite;flex:0 0 auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.gate{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:linear-gradient(135deg,#e8f0fa 0%,#f3eef9 45%,#eaf6f1 100%)}
+.gate .card{padding:32px 40px;text-align:center;display:flex;flex-direction:column;gap:15px;align-items:center;max-width:460px}
+.gate .logo{font-size:12px;letter-spacing:.34em;font-weight:700;color:var(--accentink)}
+
+/* summary */
+.sum{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.kpis{display:flex;gap:10px;flex-wrap:wrap}
+.kpi{display:flex;flex-direction:column;gap:1px;padding:6px 14px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid var(--edge);min-width:104px}
+.kpi .k{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25}
+.kpi.warn .v{color:var(--bad)}
+.sum-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.sum-l{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.clr{font-size:11.5px;font-weight:600;text-decoration:none;margin-left:auto}
+.sbar{display:flex;height:12px;border-radius:999px;overflow:hidden;background:rgba(95,108,125,.12);gap:2px}
+.sbar i{display:block;height:100%;min-width:4px}
+.sbar.mini{height:6px;width:150px;gap:1px;flex:0 0 auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;
+  border:1px solid var(--edge);background:rgba(255,255,255,.7);color:var(--ink)}
+.lg:hover{background:#fff}
+.lg .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.lg .n{color:var(--muted);font-variant-numeric:tabular-nums}
+.lg.on{border-color:var(--accentink);box-shadow:0 0 0 3px var(--ring);background:#fff}
+.lg.dim{opacity:.5}
+
+/* dashboard groups */
+.cols-hd{display:grid;grid-template-columns:var(--pcols);gap:14px;padding:0 19px;font-size:9.5px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);align-items:end;margin-bottom:-6px}
+.cols-hd .tog{text-transform:none;letter-spacing:0;font-size:11.5px;text-align:right}
+.cols-hd .tog a{text-decoration:none;font-weight:600}
+.grp{overflow:hidden}
+.grp-hd{display:flex;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;user-select:none;flex-wrap:wrap}
+.grp-hd:hover{background:rgba(255,255,255,.45)}
+.grp-hd .car{color:var(--muted);transition:transform .15s;font-size:10px;width:10px}
+.grp.open .grp-hd .car{transform:rotate(90deg)}
+.grp-nm{font-size:15px;font-weight:700}
+.grp-ct{font-size:12px;color:var(--muted)}
+.grp-bd{border-top:1px solid var(--grid);padding-bottom:4px}
+.sub-hd{display:flex;align-items:center;gap:8px;padding:10px 18px 4px;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sub-hd b{color:var(--ink);letter-spacing:0;text-transform:none;font-size:12.5px}
+.sub-hd .n{letter-spacing:0;font-variant-numeric:tabular-nums}
+.prow{display:grid;grid-template-columns:var(--pcols);gap:14px;align-items:center;padding:8px 18px;cursor:pointer;border-top:1px solid rgba(95,108,125,.07)}
+.prow:hover{background:rgba(255,255,255,.75)}
+.pname{display:flex;align-items:center;gap:11px;min-width:0}
+.pname .tx{min-width:0;display:flex;flex-direction:column}
+.pname b{font-size:14px;color:var(--accentink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pname .sc{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumbs{display:flex;flex:0 0 auto;width:78px}
+.thumbs .ph{width:36px;height:36px;border-radius:9px;margin-left:-15px;box-shadow:0 0 0 2px rgba(255,255,255,.95)}
+.thumbs .ph:first-child{margin-left:0}
+.thumbs.sm{width:auto}
+.thumbs.sm .ph{width:30px;height:30px;border-radius:8px;margin-left:-10px}
+.thumbs.sm .ph:first-child{margin-left:0}
+.thumbs .ph.none{font-size:0;background:rgba(236,240,245,.95)}
+.thumbs .ph.nost{background:transparent;border:1.5px dashed rgba(95,108,125,.22);box-shadow:none}
+.nstep{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nstep.none{color:var(--faint)}
+.upd{font-size:11.5px;color:var(--muted);text-align:right;white-space:nowrap}
+.pill{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.wt{display:flex;align-items:center;gap:7px;min-width:0;font-size:12.5px}
+.wt .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wt .nm.none{color:var(--faint)}
+.days{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.days.mid{color:var(--warn)}
+.days.old{color:var(--bad)}
+.av{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;flex:0 0 auto;letter-spacing:.02em}
+.av.s{width:18px;height:18px;font-size:8px}
+.av.buyer{background:rgba(22,32,44,.09);color:var(--ink)}
+.av.none{background:transparent;border:1.5px dashed rgba(95,108,125,.45);color:var(--muted)}
+
+/* photos */
+.ph{width:56px;height:56px;border-radius:10px;overflow:hidden;flex:0 0 auto;background:rgba(255,255,255,.8);border:1px solid var(--edge);
+  display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:var(--faint);letter-spacing:.05em}
+.ph img{width:100%;height:100%;object-fit:contain;background:#fff;display:block}
+.ph.load{background:linear-gradient(100deg,rgba(255,255,255,.5) 30%,#fff 50%,rgba(255,255,255,.5) 70%);background-size:220% 100%;animation:shim 1.3s linear infinite}
+@keyframes shim{to{background-position:-220% 0}}
+
+/* kanban */
+.kb-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kb-bar label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer}
+.kb{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
+.kcol{flex:0 0 288px;display:flex;flex-direction:column;max-height:calc(100vh - 215px);min-height:180px}
+.kcol-hd{display:flex;align-items:center;gap:9px;padding:12px 14px 8px}
+.kcol-hd .nm{font-weight:700;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kcol-hd .ct{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--accentink);background:rgba(255,255,255,.8);
+  border:1px solid var(--edge);border-radius:999px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.kcol .sbar.mini{width:auto;margin:0 14px 8px}
+.kcol-bd{flex:1;overflow-y:auto;padding:4px 10px 12px;display:flex;flex-direction:column;gap:8px;border-radius:0 0 18px 18px;transition:background .12s}
+.kcol.over .kcol-bd{background:rgba(47,155,214,.08);box-shadow:inset 0 0 0 2px rgba(47,155,214,.35)}
+.kcard{background:rgba(255,255,255,.88);border:1px solid var(--edge);border-radius:13px;padding:10px 12px;
+  box-shadow:0 2px 8px rgba(31,45,75,.07);cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.kcard:hover{box-shadow:0 4px 16px rgba(31,45,75,.13);background:#fff}
+.kcard[draggable=true]{cursor:grab}
+.kcard.drag{opacity:.4}
+.kc-top{display:flex;align-items:flex-start;gap:8px}
+.kc-nm{font-weight:700;font-size:13px;color:var(--accentink);line-height:1.3}
+.kc-co{font-size:11.5px;color:var(--muted);line-height:1.3}
+.kc-ns{font-size:12px;line-height:1.35;color:var(--ink)}
+.kc-ft{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kc-sc{font-size:11px;color:var(--muted);margin-left:auto}
+.kempty{font-size:12px;color:var(--faint);text-align:center;padding:18px 6px;border:1.5px dashed rgba(95,108,125,.22);border-radius:12px}
+
+/* project page */
+.p-hd{padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.p-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.p-name{font-size:22px;font-weight:700;letter-spacing:-.2px;border:1px solid transparent;background:transparent;padding:4px 8px;margin-left:-8px;
+  border-radius:10px;flex:0 1 auto;width:auto;field-sizing:content;min-width:220px;max-width:min(680px,100%)}
+.p-name:hover:not(:disabled){border-color:var(--edge);background:rgba(255,255,255,.6)}
+.p-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px 14px}
+.p-grid .w4{grid-column:1/-1}
+.since{font-size:11px;color:var(--muted)}
+.p-meta{font-size:11.5px;color:var(--muted)}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding:14px 16px}
+.st{display:flex;gap:11px;align-items:flex-start;padding:10px;border-radius:14px;background:rgba(255,255,255,.72);border:1px solid var(--edge);position:relative;min-width:0}
+.st .ph{width:76px;height:76px;cursor:zoom-in}
+.st-b{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;padding-right:16px}
+.st-s{font-weight:700;font-size:13.5px}
+.st-d{font-size:12.5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.st-m{font-size:11px;color:var(--muted);display:flex;gap:5px 8px;flex-wrap:wrap;align-items:center}
+.st-m a{font-weight:700;text-decoration:none}
+.st-m a:hover{text-decoration:underline}
+.tp{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:7px;background:rgba(95,108,125,.12);color:var(--muted);white-space:nowrap}
+.st .rm{position:absolute;top:6px;right:5px;opacity:0;transition:opacity .13s}
+.st:hover .rm{opacity:1}
+.st .gone{font-size:10.5px;font-weight:700;color:var(--warn)}
+.hist{padding:6px 16px 12px}
+.hrow{display:grid;grid-template-columns:118px 150px 120px minmax(0,1fr);gap:10px;font-size:12px;padding:6px 2px;border-bottom:1px solid rgba(95,108,125,.08)}
+.hrow:last-child{border-bottom:0}
+.hrow .t{color:var(--muted);white-space:nowrap}
+.hrow .by{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hrow .a{color:var(--muted);font-weight:600}
+.hrow .v{overflow-wrap:anywhere}
+
+/* dialogs */
+dialog{margin:auto;border:1px solid var(--edge);border-radius:18px;padding:0;max-width:520px;width:94vw;
+  background:rgba(255,255,255,.93);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:var(--shadow);color:var(--ink)}
+dialog::backdrop{background:rgba(22,32,44,.3);backdrop-filter:blur(3px)}
+dialog.wide{max-width:1080px}
+.dlg-bd{padding:18px;display:flex;flex-direction:column;gap:13px}
+.dlg-t{font-weight:700;font-size:16px}
+.dlg-ft{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pk-hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pk-hd .search{flex:1 1 340px;width:auto}
+.pk-list{height:min(56vh,600px);overflow:auto;border:1px solid var(--edge);border-radius:14px;background:rgba(255,255,255,.6)}
+.pk-row{display:grid;grid-template-columns:26px 48px 118px minmax(170px,1fr) 128px 104px 150px 72px 74px;gap:10px;align-items:center;
+  padding:5px 10px;border-bottom:1px solid rgba(95,108,125,.08);font-size:12.5px;cursor:pointer}
+.pk-row:hover{background:rgba(255,255,255,.9)}
+.pk-row.on{background:rgba(47,155,214,.11)}
+.pk-row.in{cursor:default;opacity:.55}
+.pk-row .ph{width:44px;height:44px;border-radius:8px}
+.pk-row .s{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pk-row .d{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pk-row .c{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);min-width:0}
+.pk-row .inp{font-size:10px;font-weight:700;color:var(--accentink);display:block}
+.pk-row.head{position:sticky;top:0;z-index:2;background:rgba(240,245,251,.98);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);cursor:default;padding-top:8px;padding-bottom:8px}
+.pk-more{padding:12px;text-align:center;font-size:12px;color:var(--muted)}
+.pk-tgt{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.pk-tgt select{width:260px;padding:6px 10px}
+.lb{max-width:min(1100px,94vw);background:#fff;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.lb img{max-width:100%;max-height:78vh;object-fit:contain;display:block}
+.lb-cap{font-size:13px;font-weight:600}
+
+/* team & lists */
+.tm{padding:14px 18px;display:flex;flex-direction:column;gap:12px}
+.tm-search{display:flex;flex-direction:column;gap:7px;max-width:560px}
+.tm-res{display:flex;flex-wrap:wrap;gap:6px}
+.tm-t{width:100%;border-collapse:collapse;font-size:12.5px}
+.tm-t th{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--grid);text-align:center;white-space:nowrap}
+.tm-t td{padding:6px 8px;border-bottom:1px solid rgba(95,108,125,.08);text-align:center;vertical-align:middle}
+.tm-t th:nth-child(-n+2),.tm-t td:nth-child(-n+2){text-align:left}
+.tm-t tr.off td{opacity:.5}
+.tm-n{font-weight:600;white-space:nowrap}
+.tm-t .ls-nm{max-width:300px;padding:6px 10px}
+.tm-t .u{color:var(--muted);font-variant-numeric:tabular-nums}
+.sws{display:flex;gap:5px}
+.sw{width:17px;height:17px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(95,108,125,.28);padding:0}
+.sw.on{box-shadow:0 0 0 2px var(--ink)}
+.addrow{display:flex;gap:8px;max-width:460px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(90px);z-index:95;padding:11px 19px;border-radius:12px;
+  font-size:13px;font-weight:600;transition:.24s;opacity:0;background:rgba(22,32,44,.92);color:#fff;pointer-events:none;max-width:90vw}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+
+body.ro [data-need=edit],body.nocreate [data-need=create],body.nodel [data-need=delete],body:not(.admin) [data-need=admin]{display:none!important}
+@media (max-width:1320px){.search{width:180px}}
+@media (max-width:640px){.topbar{flex-wrap:wrap;row-gap:6px}.topbar .spacer{flex-basis:100%;height:0}}
+@media (max-width:980px){
+  :root{--pcols:minmax(0,1fr) 130px}
+  .prow>:nth-child(n+3),.cols-hd>:nth-child(n+3){display:none}
+  .p-grid{grid-template-columns:1fr 1fr}
+  .pk-row{grid-template-columns:26px 44px 110px minmax(0,1fr)}
+  .pk-row>:nth-child(n+5){display:none}
+  .search{width:170px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}#flow{display:none}}
+</style>
+</head>
+<body>
+<canvas id="flow"></canvas>
+
+<div class="gate" id="gate">
+  <div class="card">
+    <div class="logo">METRO1</div>
+    <div>
+      <div style="font-size:19px;font-weight:700">Sales Projects</div>
+      <div class="hint" style="margin-top:4px">Projects by company and buyer, linked to the Quote Tracker</div>
+    </div>
+    <div id="gateMsg" class="inline-load"><div class="spin"></div>Checking your session…</div>
+    <button class="btn primary" id="signIn" style="display:none">Sign in with Microsoft</button>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="topbar">
+    <div class="brand">M1S Sales Projects</div>
+    <div class="spacer"></div>
+    <div class="save" id="saveState"></div>
+    <div class="who" id="whoName"></div>
+    <button class="btn sm" id="signOut">Sign out</button>
+  </div>
+  <main class="main" id="main">
+    <div class="outer">
+      <div class="phead" id="head">
+        <h1 id="hTitle">Sales Projects</h1>
+        <div class="seg" id="vSeg"><button data-v="dash" class="on">Dashboard</button><button data-v="kanban">Kanban</button></div>
+        <div class="spacer"></div>
+        <input class="search" id="q" placeholder="Search projects, styles, people…" autocomplete="off">
+        <div class="seg" id="aSeg"><button data-a="Active" class="on">Active</button><button data-a="Archived">Archived</button><button data-a="All">All</button></div>
+        <div class="seg" id="gSeg" title="Group the dashboard"><button data-g="company" class="on">By company</button><button data-g="buyer">By buyer</button></div>
+        <button class="btn sm" id="reloadBtn" title="Reload from SharePoint">↻</button>
+        <button class="btn" id="teamBtn" data-need="admin" title="People and permissions">👥 Team</button>
+        <button class="btn" id="listsBtn" data-need="admin" title="Status list">Lists</button>
+        <button class="btn primary" id="newBtn" data-need="create">+ New project</button>
+      </div>
+      <div id="view"></div>
+    </div>
+  </main>
+</div>
+
+<div id="dls" hidden></div>
+
+<dialog id="newDlg">
+  <div class="dlg-bd">
+    <div class="dlg-t">New project</div>
+    <label class="fld"><span>Project name</span><input id="nName" autocomplete="off" placeholder="e.g. Holiday 2027 Gift Sets"></label>
+    <div class="row2">
+      <label class="fld"><span>Company</span><input id="nCompany" list="dlCompany" autocomplete="off"></label>
+      <label class="fld"><span>Buyer</span><input id="nBuyer" list="dlBuyer" autocomplete="off"></label>
+    </div>
+    <div class="row2">
+      <label class="fld"><span>Status</span><select id="nStatus"></select></label>
+      <label class="fld"><span>Waiting on</span><select id="nWho"></select></label>
+    </div>
+    <label class="fld"><span>Next step</span><input id="nNext" autocomplete="off" placeholder="What happens next…"></label>
+    <div class="hint" id="nSub"></div>
+    <div class="err" id="nErr"></div>
+    <div class="dlg-ft"><button class="btn" id="nCancel">Cancel</button><button class="btn primary" id="nCreate">Create project</button></div>
+  </div>
+</dialog>
+
+<dialog id="pickDlg" class="wide">
+  <div class="dlg-bd">
+    <div class="pk-hd">
+      <div class="dlg-t" id="pkTitle">Add styles from the Quote Tracker</div>
+      <div class="spacer"></div>
+      <a class="hint" id="pkTrLink" target="_blank" rel="noopener">Open Quote Tracker ↗</a>
+    </div>
+    <div class="pk-hd">
+      <input class="search" id="pkQ" placeholder="Search style, description, brand, customer, quote sheet…" autocomplete="off">
+      <div class="seg" id="pkSeg"><button data-v="act" class="on">Active quotes</button><button data-v="all">Include archived</button></div>
+    </div>
+    <div class="pk-list" id="pkList"></div>
+    <div class="dlg-ft">
+      <span class="hint" id="pkCount"></span>
+      <button class="btn xs" id="pkClear">Clear</button>
+      <div class="spacer"></div>
+      <label class="pk-tgt" id="pkTgtWrap"><span>Add to</span><select id="pkTgt"></select></label>
+      <button class="btn" id="pkCancel">Cancel</button>
+      <button class="btn primary" id="pkAdd">Add</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="cfmDlg">
+  <div class="dlg-bd">
+    <div class="dlg-t" id="cfmMsg"></div>
+    <div class="hint" id="cfmDetail"></div>
+    <div class="dlg-ft"><button class="btn" id="cfmCancel">Cancel</button><button class="btn danger" id="cfmOk">Delete</button></div>
+  </div>
+</dialog>
+
+<dialog id="lbDlg" class="lb">
+  <img id="lbImg" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+  <button class="btn sm" id="lbClose">Close</button>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+<script>
+"use strict";
+
+/* ============================== CONFIG ============================== */
+const CFG = {
+  clientId : "48aef7ff-b6b2-417c-a8e6-343d6b81f617",                // Entra app "Sales Projects" (SPA)
+  tenantId : "eeea7e3e-9ccb-4a16-894e-3417c6a7a4c1",
+  host     : "met1sol.sharepoint.com",
+  sitePath : "/sites/Production",
+  scopes   : ["User.Read", "Sites.ReadWrite.All"],
+  owner    : "saul@metro1solutions.com",            // always admin
+
+  listProjects : "Sales_Projects",
+  listTracker  : "Qoute_Tracker",                    // internal-name typo is real
+  trackerAlt   : "Quote_Tracker",                    // display name
+  // Quote Tracker internal field names, from its live source FIELD map
+  trackerF     : { style:"Title", desc:"Descr", img:"ImgKey", date:"QuoteDate", brand:"Brand", category:"Category",
+                   customer:"Customer", stage:"Stage", action:"ActionItem", sheet:"QuoteSheet", archived:"Archived" },
+
+  docsDrive    : "Documents",
+  imgPath      : "Quote Sheets/Quote Images",        // shared photo store: /thumb + /full, <KEY>.jpg
+  settingsPath : "Sales Projects/_settings/settings.json",
+  trackerUrl   : "https://saulb96.github.io/quote-tracker/",
+  directoryUrl : "https://saulb96.github.io/quote-directory/"
+};
+const APP_VERSION = "v1";
+const MANAGE_SCOPES = ["Sites.Manage.All"];       // only asked for by the one-time list setup
+const G = "https://graph.microsoft.com/v1.0";
+const SAVE_MS = 900, HIST_MAX = 150, PICK_MAX = 250;
+
+/* Sales_Projects columns (Title = project name). Created by the in-app setup. */
+const LIST_COLS = [
+  { name:"Company",       text:{} },
+  { name:"Buyer",         text:{} },
+  { name:"Status",        text:{} },
+  { name:"WaitingOn",     text:{} },
+  { name:"WaitingOnName", text:{} },
+  { name:"WaitingSince",  dateTime:{ format:"dateOnly" } },
+  { name:"NextStep",      text:{} },
+  { name:"Notes",         text:{ allowMultipleLines:true, textType:"plain", linesForEditing:6 } },
+  { name:"StylesJson",    text:{ allowMultipleLines:true, textType:"plain", linesForEditing:6 } },
+  { name:"HistoryJson",   text:{ allowMultipleLines:true, textType:"plain", linesForEditing:6 } },
+  { name:"Archived",      text:{} }
+];
+const CANON = LIST_COLS.map(c => c.name);
+const LONG_COLS = ["Notes", "StylesJson", "HistoryJson"];
+const FMAP = { name:"Title", company:"Company", buyer:"Buyer", status:"Status", waitingOn:"WaitingOn", waitingOnName:"WaitingOnName",
+  waitingSince:"WaitingSince", nextStep:"NextStep", notes:"Notes", styles:"StylesJson", history:"HistoryJson", archived:"Archived" };
+
+/* status colours: [soft background, ink, solid] */
+const PAL = {
+  blue:  ["rgba(47,155,214,.16)", "#155f96", "#2f9bd6"],
+  green: ["rgba(54,163,122,.18)", "#1d7a55", "#36a37a"],
+  amber: ["rgba(224,169,46,.20)", "#8c6208", "#e0a92e"],
+  purple:["rgba(148,102,214,.16)","#6b3fae", "#9466d6"],
+  orange:["rgba(242,115,74,.18)", "#b4452f", "#f2734a"],
+  teal:  ["rgba(32,150,160,.16)", "#17707a", "#2096a0"],
+  rose:  ["rgba(214,84,128,.15)", "#a3305c", "#d65480"],
+  gray:  ["rgba(95,108,125,.14)", "#5f6c7d", "#8b97a6"]
+};
+const PAL_ORDER = Object.keys(PAL);
+const NO_STATUS = ["rgba(95,108,125,.08)", "#8b97a6", "#c9d0d8"];
+const HLAB = { created:"Created", status:"Status", waiting:"Waiting on", "styles+":"Added styles", "styles-":"Removed style",
+  archived:"Archived", unarchived:"Unarchived", renamed:"Renamed", company:"Company", buyer:"Buyer", statusRename:"Status renamed" };
+
+/* ============================== STATE =============================== */
+const S = {
+  acct:null, siteId:null, lists:{}, cols:{}, missingCols:[], colProblems:[], driveDocs:null,
+  projects:[], loadedAt:0, ready:false,
+  tracker:[], trackerById:new Map(), trackerState:"idle", trackerErr:"", trP:null,
+  settings:{ people:[], statuses:[] }, settingsOk:false, settingsErr:"", setPending:false, setTimer:null, folderOk:false,
+  can:{ admin:false, create:false, edit:false, delete:false },
+  view:"dash", listView:"dash", curId:null, q:"", arch:"Active", group:"company",
+  fStatus:new Set(), fWho:new Set(), folds:{}, kbHide:false,
+  saving:0, pending:new Set(), saveErr:"", everSaved:false, dragId:null
+};
+
+/* ============================== UTIL ================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m]));
+const keyOf = s => String(s || "").toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+const encPath = p => p.split("/").map(encodeURIComponent).join("/");
+const norm = s => String(s == null ? "" : s).trim().replace(/\s+/g, " ");
+const lc = s => norm(s).toLowerCase();
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const cssEsc = s => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/["\\]/g, "\\$&");
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+const parseJ = (s, d) => { try { const v = JSON.parse(s); return v == null ? d : v; } catch(e){ return d; } };
+const tokens = v => String(v == null ? "" : v).split(/\s*;\s*/).map(x => x.trim()).filter(Boolean);
+function todayIso(){ const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function daysSince(iso){
+  if (!iso) return 0;
+  const a = new Date(String(iso).slice(0,10) + "T00:00:00"), b = new Date(todayIso() + "T00:00:00");
+  return isNaN(a) ? 0 : Math.max(0, Math.round((b - a) / 86400000));
+}
+function fmtDay(iso){ const d = String(iso || "").slice(0,10).split("-"); return d.length === 3 ? Number(d[1]) + "/" + Number(d[2]) + "/" + d[0] : ""; }
+function fmtShort(iso){
+  if (!iso) return "";
+  const d = new Date(iso); if (isNaN(d)) return "";
+  return (d.getMonth() + 1) + "/" + d.getDate() + (d.getFullYear() !== new Date().getFullYear() ? "/" + String(d.getFullYear()).slice(2) : "");
+}
+function fmtStamp(iso){
+  const d = new Date(iso); if (isNaN(d)) return "";
+  let h = d.getHours(); const ap = h >= 12 ? "p" : "a"; h = h % 12 || 12;
+  return (d.getMonth() + 1) + "/" + d.getDate() + "/" + String(d.getFullYear()).slice(2) + " " + h + ":" + String(d.getMinutes()).padStart(2, "0") + ap;
+}
+function hash(s){ let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); }
+function initials(n){ const w = norm(n).replace(/\(.*?\)/g, "").split(" ").filter(Boolean); return ((w[0] || "?")[0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase(); }
+function countBy(arr, fn){ const m = new Map(); arr.forEach(x => { const k = fn(x); m.set(k, (m.get(k) || 0) + 1); }); return m; }
+function ls(k, v){ try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch(e){ return null; } }
+let toastT = null;
+function toast(m, ms){ const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), ms || 2600); }
+function confirmAsk(msg, detail, okLabel){
+  return new Promise(res => {
+    const dlg = $("#cfmDlg");
+    $("#cfmMsg").textContent = msg; $("#cfmDetail").textContent = detail || "";
+    $("#cfmOk").textContent = okLabel || "Delete";
+    const done = v => { if (dlg.open) dlg.close(); $("#cfmOk").onclick = null; $("#cfmCancel").onclick = null; dlg.oncancel = null; res(v); };
+    $("#cfmOk").onclick = () => done(true);
+    $("#cfmCancel").onclick = () => done(false);
+    dlg.oncancel = e => { e.preventDefault(); done(false); };
+    dlg.showModal();
+  });
+}
+
+/* ============================== BACKGROUND ========================== */
+function flowField(){
+  const cv = $("#flow"), ctx = cv.getContext("2d");
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let W, H;
+  const resize = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
+  resize(); addEventListener("resize", resize);
+  let seed = 20260610;
+  const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const P = [];
+  for (let i = 0; i < 70; i++) P.push({ x:rnd() * W, y:rnd() * H, s:.18 + rnd() * .34 });
+  const noise = (x, y, t) => Math.sin(x * .0016 + t) + Math.cos(y * .0021 - t * .8) + Math.sin((x + y) * .0009 + t * .5);
+  let t = 0;
+  (function tick(){
+    t += .0016;
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 1; ctx.strokeStyle = "rgba(27,111,174,.13)";
+    P.forEach(p => {
+      const a = noise(p.x, p.y, t) * Math.PI;
+      p.x += Math.cos(a) * p.s; p.y += Math.sin(a) * p.s;
+      if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+      if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - Math.cos(a) * 7, p.y - Math.sin(a) * 7); ctx.stroke();
+    });
+    requestAnimationFrame(tick);
+  })();
+}
+
+/* ============================== MSAL ================================ */
+const redirectUri = window.location.origin + window.location.pathname;
+const framed = (function(){ try { return window.self !== window.top; } catch(e){ return true; } })();
+let msalApp = null;
+async function getToken(scopes, force, popup){
+  try { return (await msalApp.acquireTokenSilent({ scopes:scopes, account:S.acct, forceRefresh:!!force })).accessToken; }
+  catch(e){
+    if (framed || popup) return (await msalApp.acquireTokenPopup({ scopes:scopes })).accessToken;
+    msalApp.acquireTokenRedirect({ scopes:scopes });
+    return new Promise(() => {});
+  }
+}
+
+/* ============================== GRAPH =============================== */
+async function gf(path, opts, attempt){
+  opts = opts || {}; attempt = attempt || 0;
+  const tok = await getToken(opts.scopes || CFG.scopes, attempt === 9, !!opts.scopes);
+  const h = Object.assign({ Authorization:"Bearer " + tok }, opts.headers || {});
+  if (typeof opts.body === "string" && !h["Content-Type"]) h["Content-Type"] = "application/json";
+  const url = /^https?:/.test(path) ? path : G + path;
+  const res = await fetch(url, { method:opts.method || "GET", headers:h, body:opts.body });
+  if ((res.status === 429 || res.status === 503) && attempt < 3){
+    const ra = parseInt(res.headers.get("Retry-After") || "", 10);
+    await sleep(Math.min(30, isNaN(ra) ? Math.pow(2, attempt + 1) : ra) * 1000);
+    return gf(path, opts, attempt + 1);
+  }
+  if (res.status === 401 && attempt !== 9) return gf(path, opts, 9);     // one forced token refresh
+  if (!res.ok){
+    const txt = await res.text().catch(() => "");
+    const err = new Error("SharePoint " + res.status + " — " + txt.slice(0, 240));
+    err.status = res.status; err.raw = txt;
+    throw err;
+  }
+  if (res.status === 204 || res.status === 202) return null;
+  const ct = res.headers.get("Content-Type") || "";
+  return ct.indexOf("json") >= 0 ? res.json() : res.text();
+}
+async function gAll(path){
+  const out = []; let next = path;
+  while (next){
+    const p = await gf(next);
+    if (p && p.value) out.push.apply(out, p.value);
+    next = p && p["@odata.nextLink"] ? p["@odata.nextLink"] : null;
+  }
+  return out;
+}
+
+/* ====================== SITE / LISTS / COLUMNS ====================== */
+async function resolveSite(){
+  if (!S.siteId) S.siteId = (await gf("/sites/" + CFG.host + ":" + CFG.sitePath + "?$select=id")).id;
+  S.lists = {};
+  (await gAll("/sites/" + S.siteId + "/lists?$select=id,name,displayName&$top=300")).forEach(l => {
+    [l.name, l.displayName].forEach(n => { if (n){ S.lists[n] = l.id; S.lists[String(n).toLowerCase()] = l.id; } });
+  });
+  if (!S.driveDocs){
+    const drives = await gAll("/sites/" + S.siteId + "/drives?$select=id,name");
+    const d = drives.find(x => x.name === CFG.docsDrive) || drives[0];
+    S.driveDocs = d ? d.id : null;
+  }
+}
+const listId = n => S.lists[n] || S.lists[String(n).toLowerCase()] || null;
+const projList = () => listId(CFG.listProjects);
+const itemUrl = id => "/sites/" + S.siteId + "/lists/" + projList() + "/items/" + id;
+/* map canonical column names to the real internal names (handles the digit
+   SharePoint appends when a same-named column existed before) */
+async function resolveColumns(){
+  const cols = await gAll("/sites/" + S.siteId + "/lists/" + projList() + "/columns?$select=name,displayName,readOnly,text&$top=300");
+  const writable = cols.filter(c => !c.readOnly);
+  const strip = s => String(s).replace(/\d+$/, "").toLowerCase();
+  S.cols = {}; S.missingCols = []; S.colProblems = [];
+  CANON.forEach(canon => {
+    const w = canon.toLowerCase();
+    const hit = writable.find(c => c.name === canon) || writable.find(c => String(c.name).toLowerCase() === w)
+      || writable.find(c => strip(c.name) === w) || writable.find(c => String(c.displayName || "").toLowerCase().replace(/\s+/g, "") === w);
+    if (hit) S.cols[canon] = hit.name; else S.missingCols.push(canon);
+  });
+  LONG_COLS.forEach(k => {
+    const c = cols.find(x => x.name === S.cols[k]), tx = c && c.text;
+    if (!tx) return;
+    if (tx.allowMultipleLines === false) S.colProblems.push(k + " is “Single line of text” (255 characters) — set it to Multiple lines of text, Plain text.");
+    else if (tx.appendChangesToExistingText) S.colProblems.push(k + " has “Append changes to existing text” on — turn it off.");
+    else if (tx.textType === "richText") S.colProblems.push(k + " is rich text — set it to Plain text.");
+  });
+}
+const C = k => S.cols[k] || k;
+const selClause = () => ["Title"].concat(CANON.filter(k => S.cols[k]).map(k => S.cols[k])).join(",");
+async function createList(){
+  await gf("/sites/" + S.siteId + "/lists", { method:"POST", scopes:MANAGE_SCOPES, body:JSON.stringify({ displayName:CFG.listProjects, columns:LIST_COLS, list:{ template:"genericList" } }) });
+}
+async function addMissingColumns(){
+  for (const k of S.missingCols.slice()){
+    const def = LIST_COLS.find(c => c.name === k);
+    await gf("/sites/" + S.siteId + "/lists/" + projList() + "/columns", { method:"POST", scopes:MANAGE_SCOPES, body:JSON.stringify(def) });
+  }
+  await resolveColumns();
+}
+
+/* ============================== SETTINGS ============================
+   Team (people + permissions) and the status list, in one JSON file in
+   Documents/Sales Projects/_settings. Only admins change it. */
+function normSettings(j){
+  j = j || {};
+  const people = (Array.isArray(j.people) ? j.people : []).filter(p => p && p.email).map(p => ({
+    id:String(p.id || ""), name:norm(p.name) || String(p.email), email:lc(p.email), admin:!!p.admin,
+    perms:{ create:!!(p.perms && p.perms.create), edit:!!(p.perms && p.perms.edit), delete:!!(p.perms && p.perms.delete) }
+  }));
+  const statuses = (Array.isArray(j.statuses) ? j.statuses : []).filter(s => s && norm(s.name)).map(s => ({
+    name:norm(s.name), color:PAL[s.color] ? s.color : "gray", retired:!!s.retired
+  }));
+  return { people:people, statuses:statuses };
+}
+async function loadSettings(){
+  S.settings = normSettings(null); S.settingsOk = false; S.settingsErr = "";
+  if (!S.driveDocs){ S.settingsErr = "No Documents library on " + CFG.sitePath + "."; return; }
+  try {
+    const it = await gf("/drives/" + S.driveDocs + "/root:/" + encPath(CFG.settingsPath));
+    const u = it && it["@microsoft.graph.downloadUrl"];
+    if (u){
+      const r = await fetch(u, { cache:"no-store" });
+      if (!r.ok) throw new Error("download " + r.status);
+      S.settings = normSettings(await r.json());
+    }
+    S.settingsOk = true;
+  } catch(e){
+    if (e.status === 404) S.settingsOk = true;                 // not set up yet
+    else { S.settingsErr = e.message || String(e); console.warn("Settings unreadable:", e); }
+  }
+}
+async function ensureFolders(path){
+  if (S.folderOk) return;
+  const parts = path.split("/"); let cur = "";
+  for (const name of parts){
+    const parent = cur; cur = cur ? cur + "/" + name : name;
+    try { await gf("/drives/" + S.driveDocs + "/root:/" + encPath(cur) + "?$select=id"); }
+    catch(e){
+      if (e.status !== 404) throw e;
+      await gf("/drives/" + S.driveDocs + (parent ? "/root:/" + encPath(parent) + ":/children" : "/root/children"),
+        { method:"POST", body:JSON.stringify({ name:name, folder:{}, "@microsoft.graph.conflictBehavior":"fail" }) })
+        .catch(err => { if (err.status !== 409) throw err; });
+    }
+  }
+  S.folderOk = true;
+}
+function settingsChanged(){
+  if (!S.settingsOk){ toast("Settings couldn't be read, so changes can't be saved — reload and try again."); return; }
+  S.setPending = true; setSave();
+  clearTimeout(S.setTimer); S.setTimer = setTimeout(saveSettings, 700);
+}
+async function saveSettings(){
+  clearTimeout(S.setTimer);
+  try {
+    const dir = CFG.settingsPath.split("/").slice(0, -1).join("/");
+    await ensureFolders(dir);
+    const body = Object.assign({ v:1, updated:new Date().toISOString(), by:myName() }, S.settings);
+    await gf("/drives/" + S.driveDocs + "/root:/" + encPath(CFG.settingsPath) + ":/content",
+      { method:"PUT", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(body, null, 2) });
+    S.setPending = false; S.everSaved = true; if (/^Settings/.test(S.saveErr)) S.saveErr = "";
+  } catch(e){
+    S.saveErr = "Settings not saved — " + (e.status === 403 ? "no permission to write to Documents." : (e.message || e));
+    console.error(e);
+  }
+  setSave();
+}
+
+/* ============================== PEOPLE & PERMISSIONS ================ */
+const myEmail = () => lc(S.acct && (S.acct.username || (S.acct.idTokenClaims && S.acct.idTokenClaims.preferred_username) || ""));
+const myName = () => (S.acct && (S.acct.name || S.acct.username)) || "Someone";
+const mePerson = () => S.settings.people.find(p => p.email === myEmail()) || null;
+function computeCan(){
+  const me = mePerson(), claims = (S.acct && S.acct.idTokenClaims) || {};
+  const appAdmin = (claims.roles || []).some(r => /^(admin|salesadmin)$/i.test(String(r)));
+  const admin = myEmail() === lc(CFG.owner) || appAdmin || !!(me && me.admin);
+  const p = (me && me.perms) || {};
+  S.can = { admin:admin, create:admin || !!p.create, edit:admin || !!p.edit || !!p.create, delete:admin || !!p.delete };
+  const b = document.body.classList;
+  b.toggle("admin", S.can.admin); b.toggle("ro", !S.can.edit); b.toggle("nocreate", !S.can.create); b.toggle("nodel", !S.can.delete);
+  const role = S.can.admin ? '<span class="role adm">Admin</span>' : S.can.edit ? '<span class="role ed">Can edit</span>' : '<span class="role">View only</span>';
+  $("#whoName").innerHTML = "<b>" + esc(myName()) + "</b>" + role;
+}
+const byName = (a, b) => a.name.localeCompare(b.name, undefined, { sensitivity:"base" });
+function personName(k){
+  const pp = S.settings.people.find(x => x.email === k);
+  if (pp) return pp.name;
+  const pr = S.projects.find(x => x.waitingOn === k && x.waitingOnName);
+  return pr ? pr.waitingOnName : k;
+}
+function whoLabel(k, p){
+  if (!k) return "Unassigned";
+  if (k === "buyer") return p && p.buyer ? p.buyer + " (buyer)" : "Buyer";
+  return personName(k);
+}
+function avHtml(k, label, small){
+  const s = small ? " s" : "";
+  if (!k) return '<span class="av none' + s + '" title="Unassigned">?</span>';
+  if (k === "buyer") return '<span class="av buyer' + s + '" title="Buyer (external)">B</span>';
+  const nm = label || personName(k), c = PAL[PAL_ORDER[hash(k) % PAL_ORDER.length]];
+  return '<span class="av' + s + '" style="background:' + c[0] + ';color:' + c[1] + '" title="' + esc(nm) + '">' + esc(initials(nm)) + "</span>";
+}
+
+/* ============================== STATUSES ============================ */
+const statusKey = p => p.status || "";
+const whoKey = p => p.waitingOn || "";
+function statusMeta(name){
+  const i = S.settings.statuses.findIndex(s => s.name === name);
+  return i < 0 ? null : Object.assign({ i:i }, S.settings.statuses[i]);
+}
+function colorOf(name){ if (!name) return NO_STATUS; const m = statusMeta(name); return PAL[(m && m.color) || "gray"]; }
+function statusOrderKeys(keys){
+  return keys.slice().sort((a, b) => {
+    const ma = statusMeta(a), mb = statusMeta(b);
+    const ra = !a ? 3 : ma ? 1 : 2, rb = !b ? 3 : mb ? 1 : 2;
+    return ra - rb || (ma && mb ? ma.i - mb.i : String(a).localeCompare(String(b)));
+  });
+}
+const statusRank = name => { if (!name) return 9999; const m = statusMeta(name); return m ? m.i : 5000; };
+function statusPill(name, id){
+  const c = colorOf(name);
+  return '<span class="pill"' + (id ? ' id="' + id + '"' : "") + ' style="background:' + c[0] + ";color:" + c[1] + '">' + esc(name || "No status") + "</span>";
+}
+function miniBar(counts, total, extra){
+  const keys = statusOrderKeys([...counts.keys()]);
+  const tip = keys.map(k => (k || "No status") + ": " + counts.get(k)).join(" · ");
+  return '<div class="sbar mini ' + (extra || "") + '" title="' + esc(tip) + '">' +
+    keys.map(k => '<i style="width:' + (counts.get(k) / (total || 1) * 100) + "%;background:" + colorOf(k)[2] + '"></i>').join("") + "</div>";
+}
+function statusOptions(cur){
+  let h = '<option value="">No status</option>';
+  S.settings.statuses.forEach(s => {
+    if (s.retired && s.name !== cur) return;
+    h += '<option value="' + esc(s.name) + '"' + (s.name === cur ? " selected" : "") + ">" + esc(s.name) + (s.retired ? " (retired)" : "") + "</option>";
+  });
+  if (cur && !statusMeta(cur)) h += '<option value="' + esc(cur) + '" selected>' + esc(cur) + " (not in list)</option>";
+  return h;
+}
+function whoOptions(p, cur){
+  let h = '<option value="">Unassigned</option>';
+  const ppl = S.settings.people.slice().sort(byName);
+  ppl.forEach(x => { h += '<option value="' + esc(x.email) + '"' + (x.email === cur ? " selected" : "") + ">" + esc(x.name) + "</option>"; });
+  if (cur && cur !== "buyer" && !ppl.some(x => x.email === cur)) h += '<option value="' + esc(cur) + '" selected>' + esc(personName(cur)) + " (not on team)</option>";
+  h += '<option value="buyer"' + (cur === "buyer" ? " selected" : "") + ">Buyer" + (p && p.buyer ? " — " + esc(p.buyer) : " (external)") + "</option>";
+  return h;
+}
+
+/* ============================== PROJECTS ============================ */
+function fromItem(it){
+  const f = it.fields || {}, F = k => f[C(k)];
+  const by = x => (x && x.user && (x.user.displayName || x.user.email)) || "";
+  return {
+    id:String(it.id), etag:it.eTag || it["@odata.etag"] || f["@odata.etag"] || "",
+    name:norm(f.Title), company:norm(F("Company")), buyer:norm(F("Buyer")), status:norm(F("Status")),
+    waitingOn:lc(F("WaitingOn")), waitingOnName:norm(F("WaitingOnName")), waitingSince:String(F("WaitingSince") || "").slice(0, 10),
+    nextStep:norm(F("NextStep")), notes:String(F("Notes") || ""),
+    styles:(parseJ(F("StylesJson"), []) || []).filter(x => x && (x.s || x.k)),
+    history:(parseJ(F("HistoryJson"), []) || []).filter(x => x && x.t),
+    archived:/^yes$/i.test(norm(F("Archived"))),
+    created:it.createdDateTime || "", createdBy:by(it.createdBy), modified:it.lastModifiedDateTime || "", modifiedBy:by(it.lastModifiedBy)
+  };
+}
+async function loadProjects(){
+  const rows = await gAll("/sites/" + S.siteId + "/lists/" + projList() + "/items?$expand=fields($select=" + selClause() + ")&$top=999");
+  const keep = new Map(S.projects.filter(p => (p._dirty && p._dirty.size) || p._saving).map(p => [p.id, p]));
+  S.projects = rows.map(r => keep.get(String(r.id)) || fromItem(r));
+  S.loadedAt = Date.now();
+}
+const byId = id => S.projects.find(p => p.id === String(id)) || null;
+const styleId = x => x.id ? "t" + x.id : "k" + (x.k || keyOf(x.s));
+function addHist(p, a, v){
+  const e = { t:new Date().toISOString(), by:myName(), a:a, v:String(v == null ? "" : v).slice(0, 400) };
+  p.history.push(e); (p._hist = p._hist || []).push(e);
+}
+function fieldVal(p, k){
+  if (k === "styles") return JSON.stringify(p.styles);
+  if (k === "history") return JSON.stringify(p.history.slice(-HIST_MAX));
+  if (k === "archived") return p.archived ? "Yes" : "";
+  if (k === "waitingSince") return p.waitingSince ? new Date(p.waitingSince + "T12:00:00Z").toISOString() : null;
+  return p[k] == null ? "" : p[k];
+}
+function touch(p){
+  const keys = Array.prototype.slice.call(arguments, 1);
+  p._dirty = p._dirty || new Set(); keys.forEach(k => p._dirty.add(k));
+  p.modified = new Date().toISOString(); p.modifiedBy = myName();
+  S.pending.add(p.id); setSave();
+  clearTimeout(p._t); p._t = setTimeout(() => flush(p), SAVE_MS);
+}
+/* Field-level PATCH with the item's ETag. On 412 (someone else saved first) the
+   server copy is reloaded, local style adds/removes and history are replayed on
+   top of it, and the save is retried once. */
+async function flush(p, retried){
+  clearTimeout(p._t);
+  if (p._gone) return;
+  if (p._saving){ p._again = true; return; }
+  if (!p._dirty || !p._dirty.size){ S.pending.delete(p.id); setSave(); return; }
+  const keys = [...p._dirty], ops = p._ops || [], hist = p._hist || [];
+  p._dirty = new Set(); p._ops = []; p._hist = [];
+  const fields = {}; keys.forEach(k => { if (k === "name" || S.cols[FMAP[k]]) fields[C(FMAP[k])] = fieldVal(p, k); });
+  p._saving = true; S.saving++; setSave();
+  let conflict = false;
+  try {
+    const r = await gf(itemUrl(p.id) + "/fields", { method:"PATCH", headers:{ "If-Match":p.etag || "*" }, body:JSON.stringify(fields) });
+    if (r && r["@odata.etag"]) p.etag = r["@odata.etag"];
+    S.everSaved = true; if (!/^Settings/.test(S.saveErr)) S.saveErr = "";
+  } catch(e){
+    keys.forEach(k => p._dirty.add(k)); p._ops = ops.concat(p._ops); p._hist = hist.concat(p._hist);
+    if (e.status === 412 && !retried) conflict = true;
+    else if (e.status === 404){ S.saveErr = "“" + p.name + "” was deleted by someone else — reload."; }
+    else { S.saveErr = e.status === 403 ? "No permission to save to SharePoint." : (e.message || "Save failed"); console.error(e); }
+  } finally { p._saving = false; S.saving--; }
+  if (conflict){
+    try { await mergeServer(p); }
+    catch(e){ S.saveErr = "Couldn't reload “" + p.name + "” after a conflict — " + (e.message || e); setSave(); return; }
+    return flush(p, true);
+  }
+  p._again = false;
+  if (p._dirty.size && !S.saveErr) p._t = setTimeout(() => flush(p), SAVE_MS);
+  else if (!p._dirty.size) S.pending.delete(p.id);
+  setSave();
+}
+async function mergeServer(p){
+  const srv = fromItem(await gf(itemUrl(p.id) + "?$expand=fields($select=" + selClause() + ")"));
+  ["name","company","buyer","status","waitingOn","waitingOnName","waitingSince","nextStep","notes","archived"].forEach(k => { if (!p._dirty.has(k)) p[k] = srv[k]; });
+  let st = srv.styles.slice();
+  (p._ops || []).forEach(op => {
+    if (op.a === "add") op.items.forEach(x => { if (!st.some(y => styleId(y) === styleId(x))) st.push(x); });
+    else st = st.filter(y => op.keys.indexOf(styleId(y)) < 0);
+  });
+  p.styles = st;
+  if ((p._ops || []).length) p._dirty.add("styles"); else p._dirty.delete("styles");
+  p.history = srv.history.concat(p._hist || []);
+  if ((p._hist || []).length) p._dirty.add("history"); else p._dirty.delete("history");
+  p.etag = srv.etag;
+  renderKeepFocus();
+}
+/* re-render but keep the caret where it was (merges and late tracker loads) */
+function renderKeepFocus(){
+  const a = document.activeElement, id = a && a.closest && a.closest("#view") && a.id;
+  const s1 = id ? a.selectionStart : null, s2 = id ? a.selectionEnd : null;
+  render();
+  if (!id) return;
+  const n = document.getElementById(id); if (!n) return;
+  S.refocusing = true; n.focus(); S.refocusing = false;
+  try { if (s1 != null) n.setSelectionRange(s1, s2); } catch(e){}
+}
+function flushAll(){ S.projects.forEach(p => { if (p._dirty && p._dirty.size) flush(p); }); if (S.setPending) saveSettings(); }
+function editingNow(){ const a = document.activeElement; return !!(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.closest("#view")); }
+function setSave(){
+  const el = $("#saveState"); if (!el) return;
+  if (S.saveErr){ el.className = "save err"; el.textContent = "Not saved — click to retry"; el.title = S.saveErr; return; }
+  el.title = "";
+  if (S.saving || S.pending.size || S.setPending){ el.className = "save"; el.textContent = "Saving…"; return; }
+  el.className = "save ok"; el.textContent = S.everSaved ? "✓ All changes saved" : "";
+}
+/* "burlington" typed when "Burlington" exists → use the existing spelling */
+function canonCase(val, key){
+  const v = norm(val); if (!v) return v;
+  const hit = S.projects.find(p => p[key] && p[key] !== v && lc(p[key]) === lc(v));
+  return hit ? hit[key] : v;
+}
+function dupName(name, company, exceptId){
+  return S.projects.find(p => p.id !== exceptId && lc(p.name) === lc(name) && lc(p.company) === lc(company)) || null;
+}
+async function createProject(d){
+  const who = d.waitingOn || "";
+  const p0 = { name:d.name, company:d.company, buyer:d.buyer, status:d.status, waitingOn:who,
+    waitingOnName:who ? (who === "buyer" ? "Buyer" + (d.buyer ? " (" + d.buyer + ")" : "") : personName(who)) : "",
+    waitingSince:who ? todayIso() : "", nextStep:d.nextStep, notes:"", styles:[], history:[], archived:false };
+  p0.history.push({ t:new Date().toISOString(), by:myName(), a:"created", v:[d.company, d.buyer].filter(Boolean).join(" · ") });
+  const fields = { Title:p0.name };
+  Object.keys(FMAP).forEach(k => { if (k !== "name" && S.cols[FMAP[k]]){ const v = fieldVal(p0, k); if (v !== null) fields[C(FMAP[k])] = v; } });
+  let it = await gf("/sites/" + S.siteId + "/lists/" + projList() + "/items", { method:"POST", body:JSON.stringify({ fields:fields }) });
+  if (!it.fields || it.fields.Title == null) it = await gf(itemUrl(it.id) + "?$expand=fields($select=" + selClause() + ")");
+  const p = fromItem(it);
+  S.projects.push(p); S.everSaved = true; setSave();
+  return p;
+}
+function setWaiting(p, k){
+  const before = whoLabel(whoKey(p), p);
+  p.waitingOn = k || "";
+  p.waitingOnName = !k ? "" : k === "buyer" ? "Buyer" + (p.buyer ? " (" + p.buyer + ")" : "") : personName(k);
+  p.waitingSince = k ? todayIso() : "";
+  addHist(p, "waiting", before + " → " + whoLabel(k, p));
+  touch(p, "waitingOn", "waitingOnName", "waitingSince", "history");
+}
+function addStylesTo(p, rows){
+  const have = new Set(p.styles.map(styleId)), at = new Date().toISOString();
+  const items = rows.map(r => ({ id:r.id, k:r.img, s:r.style, d:r.desc, at:at, by:myName() })).filter(x => !have.has(styleId(x)));
+  if (!items.length) return 0;
+  p.styles = p.styles.concat(items);
+  (p._ops = p._ops || []).push({ a:"add", items:items });
+  addHist(p, "styles+", items.map(x => x.s || x.k).join(", "));
+  touch(p, "styles", "history");
+  return items.length;
+}
+function removeStyle(p, sid){
+  const x = p.styles.find(y => styleId(y) === sid); if (!x) return;
+  p.styles = p.styles.filter(y => styleId(y) !== sid);
+  (p._ops = p._ops || []).push({ a:"rm", keys:[sid] });
+  addHist(p, "styles-", x.s || x.k);
+  touch(p, "styles", "history");
+}
+
+/* ============================== QUOTE TRACKER (read-only) =========== */
+function loadTracker(){
+  if (S.trP) return S.trP;
+  S.trackerState = "loading";
+  S.trP = (async () => {
+    try {
+      const id = listId(CFG.listTracker) || listId(CFG.trackerAlt);
+      if (!id) throw new Error("The Quote Tracker list wasn't found on " + CFG.sitePath + ".");
+      const F = CFG.trackerF, url = sel => "/sites/" + S.siteId + "/lists/" + id + "/items?$expand=fields($select=" + sel.join(",") + ")&$top=999";
+      let rows;
+      try { rows = await gAll(url(Object.values(F))); }
+      catch(e){ if (e.status !== 400) throw e; rows = await gAll(url([F.style, F.desc, F.img, F.date, F.sheet, F.archived])); }
+      S.tracker = rows.map(r => {
+        const f = r.fields || {}, v = k => norm(f[F[k]]);
+        const style = v("style");
+        return { id:String(r.id), style:style, desc:v("desc"), img:v("img") || keyOf(style), date:String(f[F.date] || "").slice(0, 10),
+          brand:v("brand"), category:v("category"), customer:v("customer"), stage:v("stage"), action:v("action"), sheet:v("sheet"),
+          archived:!!v("archived") };
+      }).filter(r => r.style || r.desc);
+      S.tracker.forEach(r => { r.h = lc([r.style, r.desc, r.brand, r.customer, r.sheet, r.category, r.stage].join(" ")); });
+      S.tracker.sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.style.localeCompare(b.style));
+      S.trackerById = new Map(S.tracker.map(r => [r.id, r]));
+      S.trackerState = "ready";
+    } catch(e){
+      S.trackerState = "error"; S.trackerErr = e.message || String(e); S.trP = null;
+      console.warn("Quote Tracker unreachable:", e);
+    }
+    if (S.view === "project") renderKeepFocus();
+    if ($("#pickDlg").open) renderPickList();
+  })();
+  return S.trP;
+}
+function trackerFor(s){
+  if (s.id && S.trackerById.has(String(s.id))) return S.trackerById.get(String(s.id));
+  return null;
+}
+
+/* ============================== PHOTOS ==============================
+   Shared Quote Tracker store, fetched by key for what's on screen only. */
+const PH = { map:new Map(), want:new Set(), q:[], busy:false, ios:new Map() };
+function phHtml(k, act, cap){
+  const at = act ? ' data-act="' + act + '"' + (cap ? ' data-cap="' + esc(cap) + '"' : "") : "";
+  if (!k) return '<div class="ph none"' + at + ">NO IMG</div>";
+  const u = PH.map.get(k), dk = ' data-k="' + esc(k) + '"';
+  if (u) return '<div class="ph"' + dk + at + '><img src="' + esc(u) + '" alt="" onerror="phFail(this)"></div>';
+  if (u === null) return '<div class="ph none"' + dk + at + ">NO IMG</div>";
+  return '<div class="ph load"' + dk + at + "></div>";
+}
+function observePhotos(root){
+  if (!S.driveDocs || !root) return;
+  const els = root.querySelectorAll(".ph.load[data-k]");
+  if (!els.length){ const old = PH.ios.get(root.id); if (old) old.disconnect(); return; }
+  if (!("IntersectionObserver" in window)){ wantPhotos([...els].map(e => e.dataset.k)); return; }
+  const old = PH.ios.get(root.id); if (old) old.disconnect();
+  const io = new IntersectionObserver(ents => {
+    const ks = [];
+    ents.forEach(en => { if (en.isIntersecting){ ks.push(en.target.dataset.k); io.unobserve(en.target); } });
+    if (ks.length) wantPhotos(ks);
+  }, { rootMargin:"250px" });
+  PH.ios.set(root.id, io);
+  els.forEach(e => io.observe(e));
+}
+function wantPhotos(keys){
+  keys.forEach(k => { if (!k || PH.map.has(k) || PH.want.has(k)) return; PH.want.add(k); PH.q.push(k); });
+  pumpPhotos();
+}
+async function pumpPhotos(){
+  if (PH.busy) return; PH.busy = true;
+  try {
+    while (PH.q.length){
+      const chunk = PH.q.splice(0, 20);
+      try {
+        const res = await gf("/$batch", { method:"POST", body:JSON.stringify({ requests:chunk.map((k, i) => ({ id:String(i + 1), method:"GET",
+          url:"/drives/" + S.driveDocs + "/root:/" + encPath(CFG.imgPath) + "/thumb/" + encodeURIComponent(k) + ".jpg" })) }) });
+        const got = new Map();
+        ((res && res.responses) || []).forEach(r => { got.set(chunk[Number(r.id) - 1], (r.status === 200 && r.body && r.body["@microsoft.graph.downloadUrl"]) || null); });
+        chunk.forEach(k => { PH.map.set(k, got.has(k) ? got.get(k) : null); PH.want.delete(k); });
+      } catch(e){ chunk.forEach(k => { PH.map.set(k, null); PH.want.delete(k); }); console.warn("Photo batch failed:", e.message); }
+      paintPhotos(chunk);
+      await sleep(200);
+    }
+  } finally { PH.busy = false; }
+}
+function paintPhotos(keys){
+  keys.forEach(k => document.querySelectorAll('.ph[data-k="' + cssEsc(k) + '"]').forEach(el => {
+    const u = PH.map.get(k); el.classList.remove("load");
+    if (u){ el.classList.remove("none"); el.innerHTML = '<img src="' + esc(u) + '" alt="" onerror="phFail(this)">'; }
+    else { el.classList.add("none"); el.textContent = "NO IMG"; }
+  }));
+}
+/* a pre-authenticated link expired — fetch that one key again, once */
+window.phFail = function(img){
+  const box = img.closest(".ph"), k = box && box.dataset.k;
+  if (!k) return;
+  if (box.dataset.retry){ box.classList.add("none"); box.textContent = "NO IMG"; return; }
+  box.dataset.retry = "1"; PH.map.delete(k); box.classList.add("load"); box.innerHTML = "";
+  wantPhotos([k]);
+};
+async function openLightbox(k, cap){
+  if (PH.map.get(k) === null){ toast("No photo filed for " + k + " yet"); return; }
+  const dlg = $("#lbDlg"), img = $("#lbImg"), th = PH.map.get(k);
+  if (th) { img.src = th; img.style.visibility = ""; } else { img.removeAttribute("src"); img.style.visibility = "hidden"; }
+  $("#lbCap").textContent = cap || k;
+  dlg.showModal();
+  try {
+    const it = await gf("/drives/" + S.driveDocs + "/root:/" + encPath(CFG.imgPath) + "/full/" + encodeURIComponent(k) + ".jpg");
+    if (it && it["@microsoft.graph.downloadUrl"] && dlg.open){ img.src = it["@microsoft.graph.downloadUrl"]; img.style.visibility = ""; }
+  } catch(e){ if (!th && dlg.open) $("#lbCap").textContent = (cap || k) + " — no full-size photo"; }
+}
+
+/* ============================== FILTERING =========================== */
+function hay(p){
+  return lc([p.name, p.company, p.buyer, p.status, whoLabel(p.waitingOn, p), p.nextStep, p.notes]
+    .concat(p.styles.map(s => (s.s || "") + " " + (s.d || ""))).join(" "));
+}
+function baseSet(){
+  const toks = lc(S.q).split(" ").filter(Boolean);
+  return S.projects.filter(p => (S.arch === "All" || (S.arch === "Archived") === p.archived) &&
+    (!toks.length || (h => toks.every(t => h.indexOf(t) >= 0))(hay(p))));
+}
+function applyFilters(set, skip){
+  return set.filter(p => (skip === "status" || !S.fStatus.size || S.fStatus.has(statusKey(p))) &&
+                         (skip === "who" || !S.fWho.size || S.fWho.has(whoKey(p))));
+}
+const filtersOn = () => S.fStatus.size || S.fWho.size || S.q;
+const projSort = (a, b) => statusRank(a.status) - statusRank(b.status) || daysSince(b.waitingSince) - daysSince(a.waitingSince) || a.name.localeCompare(b.name);
+
+/* ============================== RENDER ============================== */
+function render(){
+  const v = S.view;
+  $("#head").classList.toggle("hide", !(v === "dash" || v === "kanban"));
+  $("#gSeg").style.display = v === "dash" ? "" : "none";
+  [...$("#vSeg").children].forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  [...$("#aSeg").children].forEach(b => b.classList.toggle("on", b.dataset.a === S.arch));
+  [...$("#gSeg").children].forEach(b => b.classList.toggle("on", b.dataset.g === S.group));
+  renderDatalists();
+  if (v === "setup") renderSetup();
+  else if (v === "project") renderProject();
+  else if (v === "team") renderTeam();
+  else if (v === "lists") renderLists();
+  else if (v === "kanban") renderKanban();
+  else renderDash();
+  observePhotos($("#view"));
+  setSave();
+}
+function renderDatalists(){
+  const opts = vals => [...new Map(vals.filter(Boolean).map(x => [x.toLowerCase(), x])).values()].sort((a, b) => a.localeCompare(b))
+    .map(x => '<option value="' + esc(x) + '">').join("");
+  $("#dls").innerHTML = '<datalist id="dlCompany">' + opts(S.projects.map(p => p.company)) + '</datalist><datalist id="dlBuyer">' + opts(S.projects.map(p => p.buyer)) + "</datalist>";
+}
+function bannersHtml(){
+  let h = "";
+  if (S.colProblems.length) h += '<div class="banner bad"><span><b>Saving is at risk.</b> ' + esc(S.colProblems.join(" ")) + " Fix it in the " + esc(CFG.listProjects) + " list settings, then reload.</span></div>";
+  if (S.missingCols.length) h += '<div class="banner"><span>The ' + esc(CFG.listProjects) + " list is missing " + esc(S.missingCols.join(", ")) + "." +
+    (S.can.admin ? '</span><button class="btn xs" data-act="mkcols">Add missing columns</button>' : " Ask Saul or Judah to add them.</span>") + "</div>";
+  if (S.settingsErr) h += '<div class="banner bad"><span>Team and status settings couldn\'t be read, so they\'re locked for now — ' + esc(S.settingsErr) + "</span></div>";
+  if (S.can.admin && S.settingsOk && (S.view === "dash" || S.view === "kanban") && (!S.settings.statuses.length || !S.settings.people.length)){
+    const need = [];
+    if (!S.settings.statuses.length) need.push('your status list under <a href="#" data-act="go" data-v="lists">Lists</a>');
+    if (!S.settings.people.length) need.push('your team under <a href="#" data-act="go" data-v="team">Team</a>');
+    h += '<div class="banner info"><span>Set up: add ' + need.join(" and ") + ".</span></div>";
+  }
+  if (!S.can.edit && S.settingsOk) h += '<div class="banner info"><span>You can view everything. To create or edit projects, ask Saul or Judah to add you.</span></div>';
+  return h;
+}
+
+/* ---------- dashboard ---------- */
+function renderDash(){
+  const base = baseSet(), set = applyFilters(base);
+  let h = bannersHtml() + summaryHtml(base, set);
+  if (!S.projects.length){
+    h += '<div class="card"><div class="empty"><b>No projects yet</b><span>Start one, then add its styles from the Quote Tracker.</span>' +
+      (S.can.create ? '<button class="btn primary" data-act="new">+ New project</button>' : "") + "</div></div>";
+  } else if (!set.length){
+    h += '<div class="card"><div class="empty">Nothing matches.' + (filtersOn() ? '<button class="btn sm" data-act="clearf">Clear filters</button>' : "") + "</div></div>";
+  } else h += groupsHtml(set);
+  $("#view").innerHTML = h;
+}
+function summaryHtml(base, set){
+  const forStatus = applyFilters(base, "status"), forWho = applyFilters(base, "who");
+  const companies = new Set(set.map(p => lc(p.company)).filter(Boolean)).size;
+  const buyers = new Set(set.map(p => lc(p.buyer)).filter(Boolean)).size;
+  const styles = new Set(); set.forEach(p => p.styles.forEach(s => styles.add(styleId(s))));
+  const stale = set.filter(p => p.waitingOn && daysSince(p.waitingSince) >= 7).length;
+  const kpi = (k, v, cls) => '<div class="kpi ' + (cls || "") + '"><span class="k">' + k + '</span><span class="v">' + v + "</span></div>";
+  const sc = countBy(forStatus, statusKey), sk = statusOrderKeys([...sc.keys()]), tot = forStatus.length || 1;
+  const bar = sk.map(k => '<i style="width:' + (sc.get(k) / tot * 100) + "%;background:" + colorOf(k)[2] + '" title="' + esc((k || "No status") + ": " + sc.get(k)) + '"></i>').join("");
+  const chip = (cls, act, k, inner, n) => '<button class="lg' + cls + '" data-act="' + act + '" data-k="' + esc(k) + '">' + inner + '<span class="n">' + n + "</span></button>";
+  const lgS = sk.map(k => chip((S.fStatus.has(k) ? " on" : "") + (S.fStatus.size && !S.fStatus.has(k) ? " dim" : ""), "fstatus", k,
+    '<span class="dot" style="background:' + colorOf(k)[2] + '"></span>' + esc(k || "No status"), sc.get(k))).join("");
+  const wc = countBy(forWho, whoKey);
+  const wk = [...wc.keys()].sort((a, b) => wc.get(b) - wc.get(a) || whoLabel(a).localeCompare(whoLabel(b)));
+  const lgW = wk.map(k => chip((S.fWho.has(k) ? " on" : "") + (S.fWho.size && !S.fWho.has(k) ? " dim" : ""), "fwho", k,
+    avHtml(k, null, true) + esc(k === "buyer" ? "Buyer (external)" : whoLabel(k)), wc.get(k))).join("");
+  return '<div class="card sum">' +
+    '<div class="kpis">' + kpi("Projects", set.length) + kpi("Companies", companies) + kpi("Buyers", buyers) + kpi("Styles", styles.size) +
+      kpi("Waiting 7+ days", stale, stale ? "warn" : "") + "</div>" +
+    '<div class="sum-row"><span class="sum-l">Status breakdown</span>' + (filtersOn() ? '<a href="#" class="clr" data-act="clearf">Clear filters</a>' : "") + "</div>" +
+    (forStatus.length ? '<div class="sbar">' + bar + "</div>" : "") +
+    '<div class="legend">' + (lgS || '<span class="hint">No projects</span>') + "</div>" +
+    '<div class="sum-row"><span class="sum-l">Waiting on</span></div>' +
+    '<div class="legend">' + (lgW || '<span class="hint">No projects</span>') + "</div>" +
+  "</div>";
+}
+function groupsHtml(set){
+  const top = new Map();
+  set.forEach(p => {
+    const a = S.group === "company" ? p.company : p.buyer, b = S.group === "company" ? p.buyer : p.company;
+    const ka = lc(a), kb = lc(b);
+    if (!top.has(ka)) top.set(ka, { label:a, items:[], sub:new Map() });
+    const g = top.get(ka); g.items.push(p);
+    if (!g.sub.has(kb)) g.sub.set(kb, { label:b, items:[] });
+    g.sub.get(kb).items.push(p);
+  });
+  const sortG = (x, y) => (x.label ? 0 : 1) - (y.label ? 0 : 1) || x.label.localeCompare(y.label, undefined, { sensitivity:"base" });
+  const n1 = S.group === "company" ? "company" : "buyer", n2 = S.group === "company" ? "buyer" : "company";
+  let h = '<div class="cols-hd"><div>Project</div><div>Status</div><div>Waiting on</div><div>Next step</div>' +
+    '<div class="tog"><a href="#" data-act="foldall" data-v="1" title="Expand all">＋</a> <a href="#" data-act="foldall" data-v="0" title="Collapse all">－</a></div></div>';
+  [...top.values()].sort(sortG).forEach(g => {
+    const fk = S.group + ":" + lc(g.label), open = S.folds[fk] !== false;
+    h += '<div class="card grp' + (open ? " open" : "") + '"><div class="grp-hd" data-act="fold" data-k="' + esc(fk) + '">' +
+      '<span class="car">▶</span><span class="grp-nm">' + esc(g.label || "(No " + n1 + ")") + "</span>" +
+      '<span class="grp-ct">' + plural(g.items.length, "project") + " · " + plural([...g.sub.keys()].filter(Boolean).length, n2) + "</span>" +
+      '<div class="spacer"></div>' + miniBar(countBy(g.items, statusKey), g.items.length) + "</div>";
+    if (open){
+      h += '<div class="grp-bd">';
+      [...g.sub.values()].sort(sortG).forEach(b => {
+        h += '<div class="sub-hd">' + (S.group === "company" ? "Buyer" : "Company") + " <b>" + esc(b.label || "—") + '</b><span class="n">' + b.items.length + "</span></div>";
+        b.items.slice().sort(projSort).forEach(p => { h += prowHtml(p); });
+      });
+      h += "</div>";
+    }
+    h += "</div>";
+  });
+  return h;
+}
+function thumbsHtml(p, n, cls){
+  const sh = p.styles.slice(0, n);
+  if (!sh.length) return '<div class="thumbs ' + (cls || "") + '"><div class="ph nost" title="No styles yet"></div></div>';
+  return '<div class="thumbs ' + (cls || "") + '">' + sh.map(s => { const t = trackerFor(s); return phHtml((t && t.img) || s.k); }).join("") + "</div>";
+}
+function daysHtml(p){
+  if (!p.waitingOn) return "";
+  const d = daysSince(p.waitingSince);
+  return '<span class="days' + (d >= 14 ? " old" : d >= 7 ? " mid" : "") + '" title="Waiting since ' + esc(fmtDay(p.waitingSince)) + '">' + (d ? d + "d" : "today") + "</span>";
+}
+function prowHtml(p){
+  const other = S.group === "company" ? "" : p.company;
+  return '<div class="prow" data-act="open" data-id="' + p.id + '">' +
+    '<div class="pname">' + thumbsHtml(p, 3) + '<div class="tx"><b>' + esc(p.name) + "</b>" +
+      '<span class="sc">' + plural(p.styles.length, "style") + (other ? " · " + esc(other) : "") + (p.archived ? " · archived" : "") + "</span></div></div>" +
+    "<div>" + statusPill(p.status) + "</div>" +
+    '<div class="wt">' + avHtml(p.waitingOn, null, false) + '<span class="nm' + (p.waitingOn ? "" : " none") + '">' + esc(whoLabel(p.waitingOn, p)) + "</span>" + daysHtml(p) + "</div>" +
+    '<div class="nstep' + (p.nextStep ? "" : " none") + '" title="' + esc(p.nextStep) + '">' + esc(p.nextStep || "—") + "</div>" +
+    '<div class="upd" title="' + esc("Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "")) + '">' + esc(fmtShort(p.modified)) + "</div>" +
+  "</div>";
+}
+
+/* ---------- kanban ---------- */
+function kanbanCols(set){
+  const by = new Map();
+  set.forEach(p => { const k = whoKey(p); if (!by.has(k)) by.set(k, []); by.get(k).push(p); });
+  const me = myEmail(), cols = [];
+  S.settings.people.slice().sort((a, b) => (b.email === me) - (a.email === me) || byName(a, b)).forEach(pp => {
+    const items = by.get(pp.email) || []; by.delete(pp.email);
+    if (items.length || !S.kbHide) cols.push({ key:pp.email, label:pp.name + (pp.email === me ? " (you)" : ""), items:items });
+  });
+  [...by.keys()].filter(k => k && k !== "buyer").sort().forEach(k => { cols.push({ key:k, label:personName(k) + " (not on team)", items:by.get(k) }); by.delete(k); });
+  const bi = by.get("buyer") || [];
+  if (bi.length || !S.kbHide) cols.push({ key:"buyer", label:"Buyer (external)", items:bi });
+  const none = by.get("") || [];
+  if (none.length || !S.kbHide) cols.push({ key:"", label:"Unassigned", items:none });
+  cols.forEach(c => c.items.sort((a, b) => daysSince(b.waitingSince) - daysSince(a.waitingSince) || statusRank(a.status) - statusRank(b.status) || a.name.localeCompare(b.name)));
+  return cols;
+}
+function kcardHtml(p){
+  return '<div class="kcard" data-act="open" data-id="' + p.id + '"' + (S.can.edit ? ' draggable="true"' : "") + ">" +
+    '<div class="kc-top"><div style="min-width:0;flex:1"><div class="kc-nm">' + esc(p.name) + "</div>" +
+      '<div class="kc-co">' + esc([p.company, p.buyer].filter(Boolean).join(" · ") || "—") + "</div></div>" + (p.styles.length ? thumbsHtml(p, 2, "sm") : "") + "</div>" +
+    (p.nextStep ? '<div class="kc-ns">' + esc(p.nextStep) + "</div>" : "") +
+    '<div class="kc-ft">' + statusPill(p.status) + daysHtml(p) + '<span class="kc-sc">' + plural(p.styles.length, "style") + "</span></div>" +
+  "</div>";
+}
+function renderKanban(){
+  const base = baseSet(), set = applyFilters(base), cols = kanbanCols(set);
+  let h = bannersHtml() + summaryHtml(base, set) +
+    '<div class="kb-bar"><span class="hint">' + (S.can.edit ? "Drag a card onto someone to hand it over — the waiting clock restarts." : "Who each project is waiting on.") + "</span>" +
+    '<div class="spacer"></div><label><input type="checkbox" data-act="kbhide"' + (S.kbHide ? " checked" : "") + "> Hide empty columns</label></div>";
+  if (!cols.length) h += '<div class="card"><div class="empty">' + (S.settings.people.length ? "Nothing to show." : "Add your team under Team to get a column per person.") + "</div></div>";
+  else {
+    h += '<div class="kb">';
+    cols.forEach(c => {
+      h += '<div class="card kcol" data-who="' + esc(c.key || "~none") + '"><div class="kcol-hd">' + avHtml(c.key, c.label) +
+        '<span class="nm" title="' + esc(c.label) + '">' + esc(c.label) + '</span><span class="ct">' + c.items.length + "</span></div>" +
+        (c.items.length ? miniBar(countBy(c.items, statusKey), c.items.length) : "") +
+        '<div class="kcol-bd">' + (c.items.length ? c.items.map(kcardHtml).join("") : '<div class="kempty">Nothing waiting</div>') + "</div></div>";
+    });
+    h += "</div>";
+  }
+  $("#view").innerHTML = h;
+  bindKanban($("#view"));
+}
+function bindKanban(v){
+  if (!S.can.edit) return;
+  v.querySelectorAll(".kcard[draggable=true]").forEach(c => {
+    c.addEventListener("dragstart", e => { S.dragId = c.dataset.id; e.dataTransfer.setData("text/plain", c.dataset.id); e.dataTransfer.effectAllowed = "move"; c.classList.add("drag"); });
+    c.addEventListener("dragend", () => { c.classList.remove("drag"); S.dragId = null; v.querySelectorAll(".kcol.over").forEach(x => x.classList.remove("over")); });
+  });
+  v.querySelectorAll(".kcol").forEach(col => {
+    col.addEventListener("dragover", e => { if (!S.dragId) return; e.preventDefault(); e.dataTransfer.dropEffect = "move"; col.classList.add("over"); });
+    col.addEventListener("dragleave", e => { if (!col.contains(e.relatedTarget)) col.classList.remove("over"); });
+    col.addEventListener("drop", e => {
+      e.preventDefault(); col.classList.remove("over");
+      const p = byId(e.dataTransfer.getData("text/plain") || S.dragId); S.dragId = null;
+      if (!p) return;
+      const k = col.dataset.who === "~none" ? "" : col.dataset.who;
+      if (whoKey(p) === k) return;
+      setWaiting(p, k); render();
+      toast(p.name + " → " + whoLabel(k, p));
+    });
+  });
+}
+
+/* ---------- project page ---------- */
+function openProject(id, noPush){
+  const p = byId(id); if (!p) { toast("That project wasn't found — it may have been deleted."); return; }
+  if (S.view === "dash" || S.view === "kanban") S.listView = S.view;
+  S.view = "project"; S.curId = p.id;
+  if (!noPush) try { history.pushState({ p:p.id }, "", "?project=" + encodeURIComponent(p.id)); } catch(e){}
+  render(); $("#main").scrollTop = 0;
+}
+function goList(){
+  S.view = S.listView || "dash"; S.curId = null;
+  try { if (location.search) history.pushState({}, "", location.pathname); } catch(e){}
+  render();
+}
+function sinceText(p){
+  if (!p.waitingOn) return "";
+  const d = daysSince(p.waitingSince);
+  return "since " + fmtDay(p.waitingSince) + " · " + (d ? plural(d, "day") : "today");
+}
+function renderProject(){
+  const p = byId(S.curId);
+  if (!p){ S.view = S.listView || "dash"; return render(); }
+  const ro = !S.can.edit, dis = ro ? " disabled" : "";
+  const tr = S.trackerState;
+  let tiles = "";
+  if (!p.styles.length) tiles = '<div class="empty"><b>No styles yet</b><span>Pick them from the Quote Tracker.</span>' +
+    (S.can.edit ? '<button class="btn primary" data-act="addstyles">+ Add styles</button>' : "") + "</div>";
+  else tiles = '<div class="st-grid">' + p.styles.map(s => tileHtml(s)).join("") + "</div>";
+  const hist = p.history.slice().reverse().slice(0, 60).map(e =>
+    '<div class="hrow"><span class="t">' + esc(fmtStamp(e.t)) + '</span><span class="by">' + esc(e.by) + '</span><span class="a">' + esc(HLAB[e.a] || e.a) +
+    '</span><span class="v">' + esc(e.v) + "</span></div>").join("");
+  $("#view").innerHTML = bannersHtml() +
+    '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+    '<div class="card p-hd">' +
+      '<div class="p-top"><input class="p-name" id="fName" size="' + Math.min(48, Math.max(14, p.name.length + 1)) + '" value="' + esc(p.name) + '"' + dis + ' aria-label="Project name">' +
+        statusPill(p.status, "stPill") + (p.archived ? '<span class="pill" style="background:rgba(95,108,125,.14);color:var(--muted)">Archived</span>' : "") +
+        '<div class="spacer"></div>' +
+        '<button class="btn sm" data-act="copylink">Copy link</button>' +
+        '<button class="btn sm" data-act="archive" data-need="edit">' + (p.archived ? "Unarchive" : "Archive") + "</button>" +
+        '<button class="btn sm del" data-act="delproj" data-need="delete">Delete</button></div>' +
+      '<div class="p-grid">' +
+        '<label class="fld"><span>Company</span><input id="fCompany" list="dlCompany" autocomplete="off" value="' + esc(p.company) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Buyer</span><input id="fBuyer" list="dlBuyer" autocomplete="off" value="' + esc(p.buyer) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Status</span><select id="fStatus"' + dis + ">" + statusOptions(p.status) + "</select></label>" +
+        '<label class="fld"><span>Waiting on</span><select id="fWho"' + dis + ">" + whoOptions(p, p.waitingOn) + '</select><div class="since" id="fSince">' + esc(sinceText(p)) + "</div></label>" +
+        '<label class="fld w4"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
+        '<label class="fld w4"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
+      "</div>" +
+      '<div class="p-meta">' + esc("Created " + (p.createdBy ? "by " + p.createdBy + " " : "") + fmtDay(String(p.created).slice(0, 10)) +
+        (p.modified ? " · Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "") : "")) + "</div>" +
+    "</div>" +
+    '<div class="card"><div class="card-hd"><h2>Styles · ' + p.styles.length + '</h2><span class="hint">from the Quote Tracker' +
+      (tr === "loading" ? " · loading…" : tr === "error" ? " · couldn't load: " + esc(S.trackerErr) : "") + '</span><div class="spacer"></div>' +
+      (p.styles.length ? '<button class="btn sm primary" data-act="addstyles" data-need="edit">+ Add styles</button>' : "") + "</div>" + tiles + "</div>" +
+    (hist ? '<div class="card"><div class="card-hd"><h2>History</h2></div><div class="hist">' + hist + "</div></div>" : "");
+  bindProject(p);
+}
+function tileHtml(s){
+  const t = trackerFor(s), sid = styleId(s);
+  const style = (t && t.style) || s.s || s.k, desc = (t && t.desc) || s.d || "";
+  const meta = [];
+  if (t){
+    tokens(t.stage).forEach(x => meta.push('<span class="tp">' + esc(x) + "</span>"));
+    if (t.customer) meta.push("<span>" + esc(t.customer) + "</span>");
+    if (t.brand) meta.push("<span>" + esc(t.brand) + "</span>");
+    if (t.sheet) meta.push('<a href="' + esc(CFG.directoryUrl + "?sheet=" + encodeURIComponent(t.sheet)) + '" target="_blank" rel="noopener" title="Open the quote sheet in Quote Directory">' + esc(t.sheet) + " ↗</a>");
+    if (t.date) meta.push("<span>Quoted " + esc(fmtDay(t.date)) + "</span>");
+    if (t.archived) meta.push('<span class="tp">Archived in tracker</span>');
+  } else if (S.trackerState === "ready") meta.push('<span class="gone">No longer in the Quote Tracker</span>');
+  return '<div class="st">' + phHtml((t && t.img) || s.k, "zoom", style + (desc ? " — " + desc : "")) +
+    '<div class="st-b"><div class="st-s">' + esc(style) + '</div><div class="st-d" title="' + esc(desc) + '">' + esc(desc || "—") + "</div>" +
+    '<div class="st-m">' + meta.join("") + "</div></div>" +
+    '<button class="icon rm" data-act="rmstyle" data-sid="' + esc(sid) + '" data-need="edit" title="Remove from this project">✕</button></div>';
+}
+function bindProject(p){
+  if (!S.can.edit) return;
+  const v = $("#view"), q = s => v.querySelector(s);
+  const field = (el, key, label) => {
+    el.addEventListener("focus", () => { if (!S.refocusing) S.orig = { id:el.id, v:p[key] || "" }; });
+    el.addEventListener("input", () => { p[key] = el.value; touch(p, key); });
+    el.addEventListener("change", () => {
+      const nv = key === "notes" ? el.value : (key === "company" || key === "buyer") ? canonCase(el.value, key) : norm(el.value);
+      p[key] = nv; if (key !== "notes") el.value = nv;
+      const was = S.orig && S.orig.id === el.id ? S.orig.v : nv;
+      if (label && norm(was) !== nv){ addHist(p, key, (norm(was) || "—") + " → " + (nv || "—")); S.orig = { id:el.id, v:nv }; touch(p, key, "history"); }
+      else touch(p, key);
+      if (key === "buyer") q("#fWho").innerHTML = whoOptions(p, p.waitingOn);
+    });
+  };
+  field(q("#fCompany"), "company", true);
+  field(q("#fBuyer"), "buyer", true);
+  field(q("#fNext"), "nextStep", false);
+  field(q("#fNotes"), "notes", false);
+  const nm = q("#fName");
+  nm.addEventListener("keydown", e => { if (e.key === "Enter") nm.blur(); if (e.key === "Escape"){ nm.value = p.name; nm.blur(); } });
+  nm.addEventListener("change", () => {
+    const nv = norm(nm.value);
+    if (!nv){ nm.value = p.name; toast("A project needs a name."); return; }
+    const d = dupName(nv, p.company, p.id);
+    if (d){ nm.value = p.name; toast("“" + d.name + "” already exists for " + (d.company || "this company") + "."); return; }
+    if (nv !== p.name){ addHist(p, "renamed", p.name + " → " + nv); p.name = nv; touch(p, "name", "history"); }
+  });
+  q("#fStatus").addEventListener("change", e => {
+    const nv = e.target.value; if (nv === p.status) return;
+    addHist(p, "status", (p.status || "No status") + " → " + (nv || "No status"));
+    p.status = nv; touch(p, "status", "history");
+    q("#stPill").outerHTML = statusPill(p.status, "stPill");
+  });
+  q("#fWho").addEventListener("change", e => { setWaiting(p, e.target.value); q("#fSince").textContent = sinceText(p); });
+}
+
+/* ---------- style picker ---------- */
+const PK = { sel:new Map(), all:false, fixed:"", q:"", shown:[] };
+function openPicker(opts){
+  opts = opts || {};
+  if (!S.can.edit){ toast("You can view projects but not change them — ask Saul or Judah for access."); return; }
+  PK.sel = new Map(); (opts.preselect || []).forEach(r => PK.sel.set(r.id, r));
+  PK.fixed = opts.projectId || ""; PK.q = ""; PK.all = false;
+  $("#pkQ").value = "";
+  [...$("#pkSeg").children].forEach(b => b.classList.toggle("on", b.dataset.v === "act"));
+  $("#pkTrLink").href = CFG.trackerUrl;
+  const fp = byId(PK.fixed);
+  $("#pkTitle").textContent = fp ? "Add styles to " + fp.name : "Add styles to a project";
+  $("#pkTgtWrap").style.display = fp ? "none" : "";
+  if (!fp){
+    const act = S.projects.filter(p => !p.archived).sort((a, b) => (a.company || "~").localeCompare(b.company || "~") || a.name.localeCompare(b.name));
+    $("#pkTgt").innerHTML = '<option value="">Choose a project…</option>' +
+      act.map(p => '<option value="' + p.id + '"' + (opts.target === p.id ? " selected" : "") + ">" + esc(p.name + (p.company ? " — " + p.company : "")) + "</option>").join("") +
+      (S.can.create ? '<option value="__new">+ New project…</option>' : "");
+  }
+  $("#pickDlg").showModal();
+  renderPickList();
+  loadTracker();
+  $("#pkQ").focus();
+}
+function pkTarget(){ return PK.fixed ? byId(PK.fixed) : byId($("#pkTgt").value); }
+function renderPickList(){
+  const box = $("#pkList");
+  if (S.trackerState === "error"){ box.innerHTML = '<div class="pk-more" style="color:var(--bad)">Couldn\'t load the Quote Tracker — ' + esc(S.trackerErr) + ' <button class="btn xs" id="pkRetry">Retry</button></div>';
+    $("#pkRetry").onclick = () => { loadTracker(); renderPickList(); }; pkCount(); return; }
+  if (S.trackerState !== "ready"){ box.innerHTML = '<div class="pk-more"><div class="inline-load"><div class="spin"></div>Loading the Quote Tracker…</div></div>'; pkCount(); return; }
+  const tgt = pkTarget(), inP = new Set(tgt ? tgt.styles.map(s => s.id).filter(Boolean) : []);
+  const uses = new Map(); S.projects.forEach(p => { if (!p.archived) p.styles.forEach(s => { if (s.id) uses.set(s.id, (uses.get(s.id) || 0) + 1); }); });
+  const toks = lc(PK.q).split(" ").filter(Boolean);
+  let rows = S.tracker.filter(r => (PK.all || !r.archived || PK.sel.has(r.id)) &&
+    (!toks.length || toks.every(t => r.h.indexOf(t) >= 0)));
+  if (toks.length){ const q0 = lc(PK.q); rows.sort((a, b) => (lc(b.style) === q0) - (lc(a.style) === q0)); }
+  const total = rows.length;
+  if (!toks.length && PK.sel.size) rows = rows.filter(r => PK.sel.has(r.id)).concat(rows.filter(r => !PK.sel.has(r.id)));
+  rows = rows.slice(0, PICK_MAX); PK.shown = rows;
+  const allOn = rows.length && rows.every(r => PK.sel.has(r.id) || inP.has(r.id));
+  let h = '<div class="pk-row head"><input type="checkbox" id="pkAll" title="Select everything shown"' + (allOn ? " checked" : "") + '><span></span>' +
+    "<span>Style</span><span>Description</span><span>Brand</span><span>Customer</span><span>Stage</span><span>Quote</span><span>Quoted</span></div>";
+  rows.forEach(r => {
+    const on = PK.sel.has(r.id), inp = inP.has(r.id), n = uses.get(r.id) || 0;
+    h += '<div class="pk-row' + (on ? " on" : "") + (inp ? " in" : "") + '" data-tid="' + r.id + '">' +
+      '<input type="checkbox" tabindex="-1"' + (on || inp ? " checked" : "") + (inp ? " disabled" : "") + ">" + phHtml(r.img) +
+      '<div class="s" title="' + esc(r.style) + '">' + esc(r.style || "—") +
+        (inp ? '<span class="inp">In this project</span>' : n ? '<span class="inp">In ' + plural(n, "project") + "</span>" : "") + "</div>" +
+      '<div class="d" title="' + esc(r.desc) + '">' + esc(r.desc) + "</div>" +
+      '<div class="c">' + esc(r.brand) + '</div><div class="c">' + esc(r.customer) + '</div><div class="c" title="' + esc(r.stage) + '">' + esc(r.stage) + "</div>" +
+      '<div class="c">' + esc(r.sheet) + '</div><div class="c">' + esc(fmtDay(r.date)) + "</div></div>";
+  });
+  if (!rows.length) h += '<div class="pk-more">No styles match' + (PK.all ? "" : " — try “Include archived”") + ".</div>";
+  else if (total > rows.length) h += '<div class="pk-more">Showing ' + rows.length + " of " + total + " — keep typing to narrow it down.</div>";
+  box.innerHTML = h;
+  observePhotos(box);
+  pkCount();
+}
+function pkCount(){
+  const n = PK.sel.size, tgt = pkTarget(), tv = PK.fixed ? "" : $("#pkTgt").value;
+  $("#pkCount").textContent = n ? plural(n, "style") + " selected" : "Tick the styles to add";
+  $("#pkClear").style.display = n ? "" : "none";
+  const b = $("#pkAdd");
+  b.disabled = !n || (!tgt && tv !== "__new");
+  b.textContent = tv === "__new" ? "Create project…" : "Add " + (n ? plural(n, "style") : "styles");
+}
+async function pickerAdd(){
+  const rows = [...PK.sel.values()];
+  if (!rows.length) return;
+  if (!PK.fixed && $("#pkTgt").value === "__new"){ $("#pickDlg").close(); openNew({ styles:rows }); return; }
+  const p = pkTarget(); if (!p) return;
+  const n = addStylesTo(p, rows);
+  $("#pickDlg").close();
+  toast(n ? "Added " + plural(n, "style") + " to " + p.name : "Those styles were already in " + p.name);
+  if (S.view === "project" && S.curId === p.id) render(); else openProject(p.id);
+}
+
+/* ---------- new project ---------- */
+let newStyles = [];
+function openNew(opts){
+  if (!S.can.create){ toast("Only selected people can create projects — ask Saul or Judah."); return; }
+  newStyles = (opts && opts.styles) || [];
+  ["#nName","#nCompany","#nBuyer","#nNext"].forEach(s => { $(s).value = ""; });
+  const first = S.settings.statuses.find(s => !s.retired);
+  $("#nStatus").innerHTML = statusOptions(first ? first.name : "");
+  $("#nWho").innerHTML = whoOptions(null, mePerson() ? myEmail() : "");
+  $("#nSub").textContent = newStyles.length ? plural(newStyles.length, "style") + " will be added to it." : "You'll add styles from the Quote Tracker next.";
+  $("#nErr").textContent = ""; $("#nCreate").disabled = false; $("#nCreate").textContent = "Create project";
+  $("#newDlg").showModal();
+  $("#nName").focus();
+}
+async function doCreate(){
+  const d = { name:norm($("#nName").value), company:canonCase($("#nCompany").value, "company"), buyer:canonCase($("#nBuyer").value, "buyer"),
+    status:$("#nStatus").value, waitingOn:$("#nWho").value, nextStep:norm($("#nNext").value) };
+  if (!d.name){ $("#nErr").textContent = "Give the project a name."; $("#nName").focus(); return; }
+  const dup = dupName(d.name, d.company, null);
+  if (dup){ $("#nErr").textContent = "“" + dup.name + "” already exists" + (dup.company ? " for " + dup.company : "") + "."; return; }
+  const btn = $("#nCreate"); btn.disabled = true; btn.textContent = "Creating…"; $("#nErr").textContent = "";
+  try {
+    const p = await createProject(d);
+    $("#newDlg").close();
+    if (newStyles.length){ const n = addStylesTo(p, newStyles); toast("Created " + p.name + " with " + plural(n, "style")); }
+    else toast("Created " + p.name);
+    newStyles = [];
+    openProject(p.id);
+  } catch(e){
+    $("#nErr").textContent = "Couldn't create it — " + (e.status === 403 ? "no permission on the list." : (e.message || e));
+    btn.disabled = false; btn.textContent = "Create project";
+  }
+}
+
+/* ---------- team (admin) ---------- */
+async function dirSearch(q){
+  const req = { scopes:["User.ReadBasic.All"], account:S.acct };
+  let tok;
+  try { tok = (await msalApp.acquireTokenSilent(req)).accessToken; }
+  catch(e){ tok = (await msalApp.acquireTokenPopup(req)).accessToken; }
+  const qq = String(q).replace(/"/g, "");
+  const r = await fetch(G + '/users?$search="displayName:' + encodeURIComponent(qq) + '" OR "mail:' + encodeURIComponent(qq) + '"&$select=id,displayName,mail,userPrincipalName&$top=8',
+    { headers:{ Authorization:"Bearer " + tok, ConsistencyLevel:"eventual" } });
+  if (!r.ok) throw new Error("Directory search failed (" + r.status + ")");
+  return ((await r.json()).value || []).map(u => ({ id:u.id, name:u.displayName || u.mail, email:lc(u.mail || u.userPrincipalName || "") })).filter(u => u.email);
+}
+function renderTeam(){
+  if (!S.can.admin){ S.view = "dash"; return render(); }
+  const owner = lc(CFG.owner), used = countBy(S.projects, whoKey);
+  const cb = (p, k, on, dis) => '<input type="checkbox" data-act="perm" data-e="' + esc(p.email) + '" data-k="' + k + '"' + (on ? " checked" : "") + (dis ? " disabled" : "") + ">";
+  const rows = S.settings.people.slice().sort(byName).map(p => {
+    const isOwner = p.email === owner, adm = p.admin || isOwner;
+    return "<tr><td class=\"tm-n\">" + esc(p.name) + (isOwner ? ' <span class="role adm">Owner</span>' : "") + "</td><td class=\"hint\">" + esc(p.email) + "</td>" +
+      "<td>" + cb(p, "admin", adm, isOwner) + "</td><td>" + cb(p, "create", adm || p.perms.create, adm) + "</td>" +
+      "<td>" + cb(p, "edit", adm || p.perms.edit || p.perms.create, adm || p.perms.create) + "</td><td>" + cb(p, "delete", adm || p.perms.delete, adm) + "</td>" +
+      '<td class="u">' + (used.get(p.email) || "") + "</td>" +
+      "<td>" + (isOwner ? "" : '<button class="icon" data-act="rmperson" data-e="' + esc(p.email) + '" title="Remove from the team">✕</button>') + "</td></tr>";
+  }).join("");
+  $("#view").innerHTML = '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+    (S.settingsErr ? '<div class="banner bad">Settings couldn\'t be read — changes here are locked. ' + esc(S.settingsErr) + "</div>" : "") +
+    '<div class="card"><div class="card-hd"><h2>Team & permissions</h2><span class="hint">Changes save automatically</span></div><div class="tm">' +
+    '<div class="hint">Everyone with access to the Production site can open the dashboard read-only. People on this list can be picked under <b>Waiting on</b> and get a Kanban column; tick what each one may do. ' +
+      "<b>Create</b> = start projects (includes edit). <b>Edit</b> = change status, waiting on, notes and add styles. <b>Admin</b> = everything, plus this page and Lists.</div>" +
+    (S.settings.people.some(p => p.email === myEmail()) ? "" : '<div class="banner info"><span>You\'re not on the list yet, so nothing can be waiting on you.</span><button class="btn xs" data-act="addme">Add me</button></div>') +
+    '<div class="tm-search"><input id="tmQ" placeholder="Search the company directory to add someone… (or type an email)" autocomplete="off"><div class="tm-res" id="tmRes"></div></div>' +
+    '<table class="tm-t"><thead><tr><th>Person</th><th>Email</th><th>Admin</th><th>Create</th><th>Edit</th><th>Delete</th><th>Waiting on them</th><th></th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="8" class="hint" style="text-align:left">No one added yet — search above.</td></tr>') + "</tbody></table></div></div>";
+  const si = $("#tmQ"), res = $("#tmRes"); let tmr = null;
+  const addBtn = u => {
+    const b = document.createElement("button"); b.className = "btn xs";
+    b.textContent = u.name + (u.email ? " · " + u.email : "") + (u.email.indexOf("@metro1solutions.com") < 0 ? " (guest)" : "");
+    b.disabled = S.settings.people.some(p => p.email === u.email);
+    b.onclick = () => addPerson(u);
+    res.appendChild(b);
+  };
+  si.oninput = () => {
+    clearTimeout(tmr); const qv = si.value.trim();
+    if (qv.length < 2){ res.innerHTML = ""; return; }
+    tmr = setTimeout(async () => {
+      res.innerHTML = '<span class="hint">Searching…</span>';
+      const typed = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(qv) ? { id:"", name:qv.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()), email:lc(qv) } : null;
+      try {
+        const L = await dirSearch(qv);
+        if (si.value.trim() !== qv) return;
+        res.innerHTML = L.length || typed ? "" : '<span class="hint">No one found.</span>';
+        L.forEach(addBtn);
+        if (typed && !L.some(u => u.email === typed.email)) addBtn(typed);
+      } catch(e){
+        res.innerHTML = '<span class="hint warn">' + esc(e.message || e) + (typed ? "" : " — you can type their full email instead.") + "</span>";
+        if (typed) addBtn(typed);
+      }
+    }, 300);
+  };
+}
+function addPerson(u){
+  if (!u.email || S.settings.people.some(p => p.email === u.email)) return;
+  S.settings.people.push({ id:u.id || "", name:u.name || u.email, email:u.email, admin:false, perms:{ create:false, edit:false, delete:false } });
+  settingsChanged(); computeCan(); renderTeam(); toast((u.name || u.email) + " added — tick what they may do");
+}
+/* ---------- lists (admin) ---------- */
+function renderLists(){
+  if (!S.can.admin){ S.view = "dash"; return render(); }
+  const used = countBy(S.projects, statusKey), st = S.settings.statuses;
+  const rows = st.map((s, i) => {
+    const n = used.get(s.name) || 0;
+    return '<tr class="' + (s.retired ? "off" : "") + '"><td><div class="sws">' + PAL_ORDER.map(c =>
+        '<button class="sw' + (s.color === c ? " on" : "") + '" data-act="lscol" data-i="' + i + '" data-c="' + c + '" style="background:' + PAL[c][2] + '" title="' + c + '"></button>').join("") + "</div></td>" +
+      '<td><input class="ls-nm" data-i="' + i + '" value="' + esc(s.name) + '"></td>' +
+      "<td>" + statusPill(s.name) + '</td><td class="u">' + n + "</td>" +
+      '<td><button class="icon mv" data-act="lsmv" data-i="' + i + '" data-d="-1" title="Move up"' + (i ? "" : " disabled") + '>▲</button>' +
+        '<button class="icon mv" data-act="lsmv" data-i="' + i + '" data-d="1" title="Move down"' + (i < st.length - 1 ? "" : " disabled") + ">▼</button></td>" +
+      '<td><button class="btn xs" data-act="lsret" data-i="' + i + '">' + (s.retired ? "Restore" : "Retire") + "</button></td>" +
+      "<td>" + (n ? "" : '<button class="icon" data-act="lsdel" data-i="' + i + '" title="Delete">✕</button>') + "</td></tr>";
+  }).join("");
+  const stray = [...used.keys()].filter(k => k && !statusMeta(k));
+  $("#view").innerHTML = '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+    (S.settingsErr ? '<div class="banner bad">Settings couldn\'t be read — changes here are locked. ' + esc(S.settingsErr) + "</div>" : "") +
+    '<div class="card"><div class="card-hd"><h2>Status list</h2><span class="hint">Changes save automatically</span></div><div class="tm">' +
+    '<div class="hint">The order here is the order on the dashboard, in the status breakdown and in every dropdown. Retire a status to stop it being picked — projects that hold it keep it.</div>' +
+    '<table class="tm-t"><thead><tr><th>Colour</th><th>Status</th><th>Preview</th><th>Projects</th><th>Order</th><th></th><th></th></tr></thead><tbody>' +
+    (rows || '<tr><td colspan="7" class="hint" style="text-align:left">No statuses yet — add your first one below.</td></tr>') + "</tbody></table>" +
+    '<div class="addrow"><input id="lsNew" placeholder="Add a status…" autocomplete="off"><button class="btn sm primary" data-act="lsadd">Add</button></div>' +
+    (stray.length ? '<div class="banner">In use but not on the list: ' + stray.map(k => "<b>" + esc(k) + '</b> <button class="btn xs" data-act="lsadopt" data-k="' + esc(k) + '">Add to list</button>').join(" ") + "</div>" : "") +
+    "</div></div>";
+  $("#lsNew").addEventListener("keydown", e => { if (e.key === "Enter") addStatus(); });
+  $("#view").querySelectorAll(".ls-nm").forEach(inp => inp.addEventListener("change", () => renameStatus(Number(inp.dataset.i), inp)));
+}
+function addStatus(name){
+  const nv = norm(name != null ? name : $("#lsNew").value);
+  if (!nv) return;
+  if (S.settings.statuses.some(s => lc(s.name) === lc(nv))){ toast("“" + nv + "” is already on the list."); return; }
+  const usedC = new Set(S.settings.statuses.map(s => s.color));
+  S.settings.statuses.push({ name:nv, color:PAL_ORDER.find(c => !usedC.has(c) && c !== "gray") || "gray", retired:false });
+  settingsChanged(); renderLists();
+  const inp = $("#lsNew"); if (inp) inp.focus();
+}
+async function renameStatus(i, inp){
+  const s = S.settings.statuses[i], nv = norm(inp.value);
+  if (!s || nv === s.name) return;
+  if (!nv || S.settings.statuses.some((x, j) => j !== i && lc(x.name) === lc(nv))){ inp.value = s.name; toast(nv ? "That status already exists." : "A status needs a name."); return; }
+  const hit = S.projects.filter(p => p.status === s.name);
+  if (hit.length && !await confirmAsk("Rename “" + s.name + "” to “" + nv + "”?", plural(hit.length, "project") + " holding it will be updated too.", "Rename")){ inp.value = s.name; return; }
+  const old = s.name; s.name = nv; settingsChanged();
+  hit.forEach(p => { p.status = nv; addHist(p, "statusRename", old + " → " + nv); touch(p, "status", "history"); });
+  renderLists();
+}
+
+/* ---------- setup ---------- */
+function renderSetup(){
+  if (!S.can.admin){
+    $("#view").innerHTML = '<div class="card"><div class="empty"><b>Sales Projects isn\'t set up yet</b><span>The ' + esc(CFG.listProjects) +
+      " list doesn't exist on " + esc(CFG.sitePath) + " yet. Ask Saul or Judah to finish the setup.</span></div></div>";
+    return;
+  }
+  $("#view").innerHTML = '<div class="card"><div class="card-hd"><h2>One-time setup</h2></div><div class="tm">' +
+    "<div>The <b>" + esc(CFG.listProjects) + "</b> list isn't on " + esc(CFG.sitePath) + " yet. Create it here with the right columns — nothing else on the site changes.</div>" +
+    '<div class="hint">Columns: Title (project name), ' + esc(CANON.join(", ")) + ". Notes, StylesJson and HistoryJson are multiple lines of plain text. Microsoft may ask you once to allow managing lists.</div>" +
+    '<div class="err" id="setupErr"></div><div><button class="btn primary" data-act="mklist">Create the list</button></div></div></div>';
+}
+
+/* ============================== EVENTS ============================== */
+document.addEventListener("click", async e => {
+  const a = e.target.closest("[data-act]");
+  if (!a || a.tagName === "INPUT") return;
+  const act = a.dataset.act, p = byId(S.curId);
+  if (a.tagName === "A" && act !== "none") e.preventDefault();
+  switch (act){
+    case "open": if (!e.target.closest("a")) openProject(a.dataset.id); break;
+    case "back": goList(); break;
+    case "go": S.view = a.dataset.v; render(); break;
+    case "new": openNew(); break;
+    case "fstatus": { const k = a.dataset.k; S.fStatus.has(k) ? S.fStatus.delete(k) : S.fStatus.add(k); render(); break; }
+    case "fwho": { const k = a.dataset.k; S.fWho.has(k) ? S.fWho.delete(k) : S.fWho.add(k); render(); break; }
+    case "clearf": S.fStatus.clear(); S.fWho.clear(); S.q = ""; $("#q").value = ""; render(); break;
+    case "fold": S.folds[a.dataset.k] = !a.parentElement.classList.contains("open") ? true : false; saveUi(); render(); break;
+    case "foldall": $("#view").querySelectorAll(".grp-hd").forEach(x => { S.folds[x.dataset.k] = a.dataset.v === "1"; }); saveUi(); render(); break;
+    case "addstyles": if (p) openPicker({ projectId:p.id }); break;
+    case "zoom": if (a.dataset.k) openLightbox(a.dataset.k, a.dataset.cap); break;
+    case "rmstyle": {
+      if (!p) break;
+      const s = p.styles.find(x => styleId(x) === a.dataset.sid); if (!s) break;
+      if (!await confirmAsk("Remove " + (s.s || s.k) + " from this project?", "It stays in the Quote Tracker.", "Remove")) break;
+      removeStyle(p, a.dataset.sid); render(); break;
+    }
+    case "copylink": {
+      if (!p) break;
+      const url = location.origin + location.pathname + "?project=" + encodeURIComponent(p.id);
+      try { await navigator.clipboard.writeText(url); toast("Link copied"); } catch(err){ toast(url, 6000); }
+      break;
+    }
+    case "archive": {
+      if (!p) break;
+      p.archived = !p.archived; addHist(p, p.archived ? "archived" : "unarchived", "");
+      touch(p, "archived", "history"); render(); toast(p.archived ? "Archived — find it under Archived" : "Back in Active");
+      break;
+    }
+    case "delproj": {
+      if (!p) break;
+      if (!await confirmAsk("Delete “" + p.name + "”?", "The project and its style links are removed for everyone. The styles stay in the Quote Tracker.", "Delete")) break;
+      try {
+        clearTimeout(p._t); p._gone = true;
+        await gf(itemUrl(p.id), { method:"DELETE" });
+        S.projects = S.projects.filter(x => x !== p); S.pending.delete(p.id);
+        toast("Deleted " + p.name); goList();
+      } catch(err){ p._gone = false; toast("Couldn't delete — " + (err.message || err), 5000); }
+      break;
+    }
+    case "rmperson": {
+      const em = a.dataset.e, pp = S.settings.people.find(x => x.email === em); if (!pp) break;
+      const n = S.projects.filter(x => x.waitingOn === em && !x.archived).length;
+      if (!await confirmAsk("Remove " + pp.name + " from the team?", n ? plural(n, "project") + " still wait on them — they'll show as “not on team” until reassigned." : "They go back to view-only.", "Remove")) break;
+      S.settings.people = S.settings.people.filter(x => x !== pp); settingsChanged(); computeCan(); renderTeam(); break;
+    }
+    case "addme": addPerson({ id:"", name:myName(), email:myEmail() }); break;
+    case "lsadd": addStatus(); break;
+    case "lsadopt": addStatus(a.dataset.k); break;
+    case "lscol": { const s = S.settings.statuses[Number(a.dataset.i)]; if (s){ s.color = a.dataset.c; settingsChanged(); renderLists(); } break; }
+    case "lsmv": {
+      const i = Number(a.dataset.i), j = i + Number(a.dataset.d), L = S.settings.statuses;
+      if (j < 0 || j >= L.length) break;
+      const t = L[i]; L[i] = L[j]; L[j] = t; settingsChanged(); renderLists(); break;
+    }
+    case "lsret": { const s = S.settings.statuses[Number(a.dataset.i)]; if (s){ s.retired = !s.retired; settingsChanged(); renderLists(); } break; }
+    case "lsdel": {
+      const s = S.settings.statuses[Number(a.dataset.i)]; if (!s) break;
+      if (!await confirmAsk("Delete the status “" + s.name + "”?", "No project uses it.", "Delete")) break;
+      S.settings.statuses = S.settings.statuses.filter(x => x !== s); settingsChanged(); renderLists(); break;
+    }
+    case "mklist": {
+      a.disabled = true; a.textContent = "Creating…";
+      try {
+        await createList(); await resolveSite(); await resolveColumns(); await loadProjects();
+        S.view = "dash"; render(); toast("List created — you're set"); loadTracker();
+      } catch(err){
+        $("#setupErr").textContent = "Couldn't create it — " + (err.status === 403 ? "the app registration needs the delegated Sites.Manage.All permission, and you need to be able to manage lists on the site." : (err.message || err));
+        a.disabled = false; a.textContent = "Try again";
+      }
+      break;
+    }
+    case "mkcols": {
+      a.disabled = true;
+      try { await addMissingColumns(); await loadProjects(); toast("Columns added"); render(); }
+      catch(err){ a.disabled = false; toast("Couldn't add them — " + (err.status === 403 ? "needs the Sites.Manage.All permission on the app registration." : (err.message || err)), 6000); }
+      break;
+    }
+  }
+});
+document.addEventListener("change", e => {
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  if (a.dataset.act === "kbhide"){ S.kbHide = a.checked; saveUi(); render(); }
+  if (a.dataset.act === "perm"){
+    const pp = S.settings.people.find(x => x.email === a.dataset.e); if (!pp) return;
+    if (a.dataset.k === "admin") pp.admin = a.checked; else pp.perms[a.dataset.k] = a.checked;
+    settingsChanged(); computeCan(); renderTeam();
+  }
+});
+
+/* ============================== UI PREFS & LINKS ==================== */
+function saveUi(){ ls("sp-ui", JSON.stringify({ view:S.view === "kanban" ? "kanban" : "dash", group:S.group, arch:S.arch, folds:S.folds, kbHide:S.kbHide })); }
+function restoreUi(){
+  const u = parseJ(ls("sp-ui"), null); if (!u) return;
+  if (u.view === "kanban" || u.view === "dash") S.view = S.listView = u.view;
+  if (u.group === "buyer" || u.group === "company") S.group = u.group;
+  if (["Active","Archived","All"].indexOf(u.arch) >= 0) S.arch = u.arch;
+  if (u.folds && typeof u.folds === "object") S.folds = u.folds;
+  S.kbHide = !!u.kbHide;
+}
+/* ?project=<id> opens a project; ?add=STYLE1,STYLE2 or ?addIds=<tracker item ids>
+   opens the picker with those styles ticked. Kept across the sign-in redirect. */
+function stashLink(){
+  const q = new URLSearchParams(location.search), o = {};
+  ["project","add","addIds"].forEach(k => { if (q.get(k)) o[k] = q.get(k); });
+  if (Object.keys(o).length) try { sessionStorage.setItem("sp-link", JSON.stringify(o)); } catch(e){}
+}
+function takeLink(){
+  let o = null;
+  try { o = JSON.parse(sessionStorage.getItem("sp-link") || "null"); sessionStorage.removeItem("sp-link"); } catch(e){}
+  try { if (location.search) history.replaceState(null, "", location.pathname); } catch(e){}
+  return o;
+}
+async function handleLink(o){
+  if (o.project){ if (byId(o.project)) openProject(o.project); else toast("That project wasn't found — it may have been deleted.", 4000); }
+  if (!o.add && !o.addIds) return;
+  if (!S.can.edit){ toast("You can view projects but not change them — ask Saul or Judah for access.", 5000); return; }
+  await loadTracker();
+  if (S.trackerState !== "ready"){ toast("Couldn't load the Quote Tracker — " + S.trackerErr, 5000); return; }
+  const rows = [], seen = new Set();
+  const push = r => { if (r && !seen.has(r.id)){ seen.add(r.id); rows.push(r); } };
+  String(o.addIds || "").split(",").map(x => x.trim()).filter(Boolean).forEach(id => push(S.trackerById.get(id)));
+  String(o.add || "").split(",").map(x => lc(x)).filter(Boolean).forEach(st => {
+    const hits = S.tracker.filter(r => lc(r.style) === st);
+    push(hits.find(r => !r.archived) || hits[0]);
+  });
+  if (!rows.length){ toast("None of those styles were found in the Quote Tracker.", 4000); return; }
+  const cur = o.project && byId(o.project);
+  openPicker({ preselect:rows, projectId:cur ? cur.id : "" });
+}
+
+/* ============================== REFRESH ============================= */
+async function maybeRefresh(force){
+  if (!S.ready || !projList()) return;
+  if (!force && Date.now() - S.loadedAt < 60000) return;
+  if (S.saving || S.pending.size || document.querySelector("dialog[open]") || editingNow()) return;
+  try { await loadProjects(); if (S.view !== "team" && S.view !== "lists" && S.view !== "setup") render(); if (force) toast("Up to date"); }
+  catch(e){ if (force) toast("Couldn't reload — " + (e.message || e), 4000); }
+}
+
+/* ============================== INIT ================================ */
+function gateMsg(html){ $("#gateMsg").innerHTML = html; }
+async function start(){
+  flowField();
+  stashLink();
+  if (/^PASTE_/.test(CFG.clientId)){
+    gateMsg('<span style="color:var(--bad)">Not connected yet — paste the Entra app\'s client ID into <b>CFG.clientId</b> in index.html.</span>');
+    return;
+  }
+  if (!window.msal){ gateMsg('<span style="color:var(--bad)">The Microsoft sign-in library didn\'t load — check the network and reload.</span>'); return; }
+  msalApp = new msal.PublicClientApplication({
+    auth:{ clientId:CFG.clientId, authority:"https://login.microsoftonline.com/" + CFG.tenantId, redirectUri:redirectUri },
+    cache:{ cacheLocation:"localStorage", storeAuthStateInCookie:false }
+  });
+  if (msalApp.initialize) await msalApp.initialize();
+  const rr = await msalApp.handleRedirectPromise().catch(e => { console.error(e); gateMsg('<span style="color:var(--bad)">' + esc(e.message || e) + "</span>"); return null; });
+  const acct = (rr && rr.account) || msalApp.getAllAccounts()[0];
+  if (!acct){
+    if (!$("#gateMsg").textContent.trim() || /Checking/.test($("#gateMsg").textContent)) gateMsg("");
+    $("#signIn").style.display = "";
+    $("#signIn").onclick = () => framed
+      ? msalApp.loginPopup({ scopes:CFG.scopes }).then(r => { S.acct = r.account; msalApp.setActiveAccount(r.account); boot(); }).catch(e => gateMsg('<span style="color:var(--bad)">' + esc(e.message || e) + "</span>"))
+      : msalApp.loginRedirect({ scopes:CFG.scopes });
+    return;
+  }
+  S.acct = acct; msalApp.setActiveAccount(acct);
+  boot();
+}
+async function boot(){
+  try {
+    $("#signIn").style.display = "none";
+    gateMsg('<div class="spin"></div>Connecting to SharePoint…');
+    await resolveSite();
+    gateMsg('<div class="spin"></div>Loading your team and statuses…');
+    await loadSettings(); computeCan();
+    restoreUi();
+    if (projList()){
+      gateMsg('<div class="spin"></div>Loading projects…');
+      await resolveColumns();
+      await loadProjects();
+    } else S.view = "setup";
+    $("#gate").style.display = "none"; $("#app").style.display = "";
+    S.ready = true;
+    render();
+    if (projList()){
+      loadTracker();
+      const link = takeLink(); if (link) handleLink(link);
+    }
+  } catch(e){
+    console.error(e);
+    const denied = e.status === 403 || e.status === 401;
+    gateMsg('<span style="color:var(--bad)">' + (denied ? "Signed in, but you don't have access to the Production site. Ask Saul or Judah to add you." : esc(e.message || "Startup failed")) + "</span>");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  $("#hTitle").title = "Sales Projects " + APP_VERSION;
+  console.info("Sales Projects " + APP_VERSION);
+  $("#signOut").onclick = () => msalApp && msalApp.logoutRedirect({ postLogoutRedirectUri:redirectUri });
+  $("#saveState").onclick = () => { if (S.saveErr){ S.saveErr = ""; setSave(); flushAll(); } };
+  $("#vSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.view = S.listView = b.dataset.v; saveUi(); render(); });
+  $("#aSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.arch = b.dataset.a; saveUi(); render(); });
+  $("#gSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.group = b.dataset.g; saveUi(); render(); });
+  let qt = null;
+  $("#q").addEventListener("input", () => { clearTimeout(qt); qt = setTimeout(() => { S.q = $("#q").value; render(); }, 120); });
+  $("#reloadBtn").onclick = () => maybeRefresh(true);
+  $("#teamBtn").onclick = () => { S.view = "team"; render(); };
+  $("#listsBtn").onclick = () => { S.view = "lists"; render(); };
+  $("#newBtn").onclick = () => openNew();
+  $("#nCancel").onclick = () => { $("#newDlg").close(); newStyles = []; };
+  $("#nCreate").onclick = doCreate;
+  $("#newDlg").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); doCreate(); } });
+  let pq = null;
+  $("#pkQ").addEventListener("input", () => { clearTimeout(pq); pq = setTimeout(() => { PK.q = $("#pkQ").value; renderPickList(); }, 150); });
+  $("#pkSeg").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; PK.all = b.dataset.v === "all";
+    [...$("#pkSeg").children].forEach(x => x.classList.toggle("on", x === b)); renderPickList(); });
+  $("#pkList").addEventListener("click", e => {
+    if (e.target.id === "pkAll"){
+      const tgt = pkTarget(), inP = new Set(tgt ? tgt.styles.map(s => s.id) : []);
+      const pick = PK.shown.filter(r => !inP.has(r.id));
+      if (e.target.checked) pick.forEach(r => PK.sel.set(r.id, r)); else pick.forEach(r => PK.sel.delete(r.id));
+      renderPickList(); return;
+    }
+    const row = e.target.closest(".pk-row[data-tid]"); if (!row || row.classList.contains("in")) return;
+    const r = S.trackerById.get(row.dataset.tid); if (!r) return;
+    if (PK.sel.has(r.id)) PK.sel.delete(r.id); else PK.sel.set(r.id, r);
+    row.classList.toggle("on", PK.sel.has(r.id)); row.querySelector("input").checked = PK.sel.has(r.id);
+    pkCount();
+  });
+  $("#pkTgt").addEventListener("change", () => renderPickList());
+  $("#pkClear").onclick = () => { PK.sel.clear(); renderPickList(); };
+  $("#pkCancel").onclick = () => $("#pickDlg").close();
+  $("#pkAdd").onclick = pickerAdd;
+  $("#lbClose").onclick = () => $("#lbDlg").close();
+  $("#lbDlg").addEventListener("click", e => { if (e.target.id === "lbDlg") $("#lbDlg").close(); });
+  window.addEventListener("popstate", () => {
+    if (!S.ready) return;
+    const id = new URLSearchParams(location.search).get("project");
+    if (id && byId(id)) openProject(id, true);
+    else if (S.view === "project"){ S.view = S.listView || "dash"; S.curId = null; render(); }
+  });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") maybeRefresh(); });
+  setInterval(() => { if (document.visibilityState === "visible") maybeRefresh(); }, 5 * 60000);
+  window.addEventListener("beforeunload", e => { if (S.saving || S.pending.size || S.setPending){ flushAll(); e.preventDefault(); e.returnValue = ""; } });
+  start();
+});
+</script>
+</body>
+</html>
