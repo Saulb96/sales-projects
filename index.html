@@ -16,7 +16,7 @@
   --warn:#9a6b2f; --warn-soft:rgba(154,107,47,.13);
   --bad:#b4452f; --bad-soft:rgba(180,69,47,.12);
   --ring:rgba(47,155,214,.18);
-  --pcols:minmax(250px,1.7fr) 150px minmax(170px,.9fr) minmax(150px,1.3fr) 72px;
+  --pcols:minmax(250px,1.7fr) 220px minmax(170px,.9fr) minmax(150px,1.3fr) 72px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -199,6 +199,44 @@ label.fld>span{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transfo
 .kc-sc{font-size:11px;color:var(--muted);margin-left:auto}
 .kempty{font-size:12px;color:var(--faint);text-align:center;padding:18px 6px;border:1.5px dashed rgba(95,108,125,.22);border-radius:12px}
 
+/* status tracks */
+.trk3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px}
+.trk{display:flex;flex-direction:column;gap:7px;min-width:0}
+.tps{display:flex;flex-direction:column;gap:3px;min-width:0;align-items:flex-start}
+.tps .pill{font-size:10.5px;padding:2px 8px}
+.tps .pill i{font-style:normal;font-weight:800;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-right:5px}
+.mbars{display:flex;gap:5px;align-items:center}
+.mbars .sbar.mini{width:56px}
+.kcol .mbars{margin:0 14px 8px}
+.kcol .mbars .sbar.mini{flex:1;width:auto;margin:0}
+select.tsel{font-weight:700}
+label.fld>span.chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink);min-height:37px}
+
+/* table view */
+.tbl-wrap{overflow:auto;max-height:calc(100vh - 130px);border-radius:18px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+.tbl th{position:sticky;top:0;z-index:2;background:rgba(240,245,251,.98);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:10px 8px;border-bottom:1px solid var(--grid);white-space:nowrap;cursor:pointer;user-select:none}
+.tbl th:hover,.tbl th.on{color:var(--accentink)}
+.tbl th.nos{cursor:default;color:var(--muted)}
+.tbl td{padding:6px 8px;border-bottom:1px solid rgba(95,108,125,.08);vertical-align:middle}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.6)}
+.tbl input,.tbl select{font-size:12px;padding:5px 8px;border-radius:9px}
+.tbl select.tsel{width:auto;min-width:130px;max-width:210px}
+.tbl .cat{width:120px}
+.tbl .dt{width:138px}
+.tbl .co{font-weight:600;white-space:nowrap}
+.tbl .by{white-space:nowrap}
+.tbl .pn{font-weight:700;color:var(--accentink);cursor:pointer;min-width:160px}
+.tbl .pn:hover{text-decoration:underline}
+.tbl .ctr{text-align:center}
+.tbl .nt{max-width:240px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.tbl .pic{cursor:pointer}
+.pic-in{display:flex;align-items:center;gap:6px}
+.pic-in .ph{width:44px;height:44px;border-radius:8px}
+.pic-in .ph.nost{background:transparent;border:1.5px dashed rgba(95,108,125,.22)}
+.pic-in .more{font-size:11px;font-weight:700;color:var(--muted)}
+
 /* project page */
 .p-hd{padding:16px 18px;display:flex;flex-direction:column;gap:14px}
 .p-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -207,6 +245,7 @@ label.fld>span{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transfo
 .p-name:hover:not(:disabled){border-color:var(--edge);background:rgba(255,255,255,.6)}
 .p-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px 14px}
 .p-grid .w4{grid-column:1/-1}
+.p-grid .w3{grid-column:span 3}
 .since{font-size:11px;color:var(--muted)}
 .p-meta{font-size:11.5px;color:var(--muted)}
 .st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding:14px 16px}
@@ -240,6 +279,7 @@ dialog.wide{max-width:1080px}
 .dlg-t{font-weight:700;font-size:16px}
 .dlg-ft{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .pk-hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .pk-hd .search{flex:1 1 340px;width:auto}
 .pk-list{height:min(56vh,600px);overflow:auto;border:1px solid var(--edge);border-radius:14px;background:rgba(255,255,255,.6)}
@@ -287,9 +327,11 @@ body.ro [data-need=edit],body.nocreate [data-need=create],body.nodel [data-need=
 @media (max-width:1320px){.search{width:180px}}
 @media (max-width:640px){.topbar{flex-wrap:wrap;row-gap:6px}.topbar .spacer{flex-basis:100%;height:0}}
 @media (max-width:980px){
-  :root{--pcols:minmax(0,1fr) 130px}
+  :root{--pcols:minmax(0,1fr) 190px}
   .prow>:nth-child(n+3),.cols-hd>:nth-child(n+3){display:none}
   .p-grid{grid-template-columns:1fr 1fr}
+  .p-grid .w3{grid-column:1/-1}
+  .trk3,.row3{grid-template-columns:1fr}
   .pk-row{grid-template-columns:26px 44px 110px minmax(0,1fr)}
   .pk-row>:nth-child(n+5){display:none}
   .search{width:170px}
@@ -324,14 +366,14 @@ body.ro [data-need=edit],body.nocreate [data-need=create],body.nodel [data-need=
     <div class="outer">
       <div class="phead" id="head">
         <h1 id="hTitle">Sales Projects</h1>
-        <div class="seg" id="vSeg"><button data-v="dash" class="on">Dashboard</button><button data-v="kanban">Kanban</button></div>
+        <div class="seg" id="vSeg"><button data-v="dash" class="on">Dashboard</button><button data-v="kanban">Kanban</button><button data-v="table">Table</button></div>
         <div class="spacer"></div>
         <input class="search" id="q" placeholder="Search projects, styles, people…" autocomplete="off">
         <div class="seg" id="aSeg"><button data-a="Active" class="on">Active</button><button data-a="Archived">Archived</button><button data-a="All">All</button></div>
         <div class="seg" id="gSeg" title="Group the dashboard"><button data-g="company" class="on">By company</button><button data-g="buyer">By buyer</button></div>
         <button class="btn sm" id="reloadBtn" title="Reload from SharePoint">↻</button>
         <button class="btn" id="teamBtn" data-need="admin" title="People and permissions">👥 Team</button>
-        <button class="btn" id="listsBtn" data-need="admin" title="Status list">Lists</button>
+        <button class="btn" id="listsBtn" data-need="admin" title="Art, pricing and PO status options">Lists</button>
         <button class="btn primary" id="newBtn" data-need="create">+ New project</button>
       </div>
       <div id="view"></div>
@@ -350,9 +392,15 @@ body.ro [data-need=edit],body.nocreate [data-need=create],body.nodel [data-need=
       <label class="fld"><span>Buyer</span><input id="nBuyer" list="dlBuyer" autocomplete="off"></label>
     </div>
     <div class="row2">
-      <label class="fld"><span>Status</span><select id="nStatus"></select></label>
-      <label class="fld"><span>Waiting on</span><select id="nWho"></select></label>
+      <label class="fld"><span>Category</span><input id="nCat" list="dlCategory" autocomplete="off"></label>
+      <label class="fld"><span>Date</span><input id="nDate" type="date"></label>
     </div>
+    <div class="row3">
+      <label class="fld"><span>Art</span><select id="nArt" class="tsel"></select></label>
+      <label class="fld"><span>Pricing</span><select id="nPricing" class="tsel"></select></label>
+      <label class="fld"><span>PO status</span><select id="nPo" class="tsel"></select></label>
+    </div>
+    <label class="fld"><span>Waiting on</span><select id="nWho"></select></label>
     <label class="fld"><span>Next step</span><input id="nNext" autocomplete="off" placeholder="What happens next…"></label>
     <div class="hint" id="nSub"></div>
     <div class="err" id="nErr"></div>
@@ -435,6 +483,12 @@ const LIST_COLS = [
   { name:"Company",       text:{} },
   { name:"Buyer",         text:{} },
   { name:"Status",        text:{} },
+  { name:"Category",      text:{} },
+  { name:"ProjectDate",   dateTime:{ format:"dateOnly" } },
+  { name:"ArtStatus",     text:{} },
+  { name:"PricingStatus", text:{} },
+  { name:"PoStatus",      text:{} },
+  { name:"WriteUp",       text:{} },
   { name:"WaitingOn",     text:{} },
   { name:"WaitingOnName", text:{} },
   { name:"WaitingSince",  dateTime:{ format:"dateOnly" } },
@@ -447,7 +501,21 @@ const LIST_COLS = [
 const CANON = LIST_COLS.map(c => c.name);
 const LONG_COLS = ["Notes", "StylesJson", "HistoryJson"];
 const FMAP = { name:"Title", company:"Company", buyer:"Buyer", status:"Status", waitingOn:"WaitingOn", waitingOnName:"WaitingOnName",
-  waitingSince:"WaitingSince", nextStep:"NextStep", notes:"Notes", styles:"StylesJson", history:"HistoryJson", archived:"Archived" };
+  waitingSince:"WaitingSince", nextStep:"NextStep", notes:"Notes", styles:"StylesJson", history:"HistoryJson", archived:"Archived",
+  category:"Category", projDate:"ProjectDate", art:"ArtStatus", pricing:"PricingStatus", po:"PoStatus", writeUp:"WriteUp" };
+
+/* the three status tracks; their option lists live in settings and default to these */
+const TRACKS = [
+  { k:"art",     label:"Art",       short:"Art" },
+  { k:"pricing", label:"Pricing",   short:"Price" },
+  { k:"po",      label:"PO status", short:"PO" }
+];
+const TRACK_DEFAULTS = {
+  art:    [["Need Cads","orange"], ["Send Cads Waiting On Buyer Approval","amber"], ["Revised Cads Needed","rose"], ["Most Approved Waiting On A Few","blue"], ["Approved","green"]],
+  pricing:[["Quoting Waiting On Factory","amber"], ["Quote Received Need To Send","orange"], ["Sent To Buyer","green"]],
+  po:     [["Waiting On Po's","amber"], ["Revised Po's Needed","rose"], ["Final Po's Received","green"]]
+};
+const isTrack = k => TRACKS.some(t => t.k === k);
 
 /* status colours: [soft background, ink, solid] */
 const PAL = {
@@ -463,17 +531,18 @@ const PAL = {
 const PAL_ORDER = Object.keys(PAL);
 const NO_STATUS = ["rgba(95,108,125,.08)", "#8b97a6", "#c9d0d8"];
 const HLAB = { created:"Created", status:"Status", waiting:"Waiting on", "styles+":"Added styles", "styles-":"Removed style",
-  archived:"Archived", unarchived:"Unarchived", renamed:"Renamed", company:"Company", buyer:"Buyer", statusRename:"Status renamed" };
+  archived:"Archived", unarchived:"Unarchived", renamed:"Renamed", company:"Company", buyer:"Buyer", statusRename:"Status renamed",
+  art:"Art", pricing:"Pricing", po:"PO status", category:"Category", projDate:"Date", writeUp:"Write-up", trackRename:"Option renamed" };
 
 /* ============================== STATE =============================== */
 const S = {
   acct:null, siteId:null, lists:{}, cols:{}, missingCols:[], colProblems:[], driveDocs:null,
   projects:[], loadedAt:0, ready:false,
   tracker:[], trackerById:new Map(), trackerState:"idle", trackerErr:"", trP:null,
-  settings:{ people:[], statuses:[] }, settingsOk:false, settingsErr:"", setPending:false, setTimer:null, folderOk:false,
+  settings:{ people:[], statuses:[], tracks:{} }, settingsOk:false, settingsErr:"", setPending:false, setTimer:null, folderOk:false,
   can:{ admin:false, create:false, edit:false, delete:false },
   view:"dash", listView:"dash", curId:null, q:"", arch:"Active", group:"company",
-  fStatus:new Set(), fWho:new Set(), folds:{}, kbHide:false,
+  fTrack:{ art:new Set(), pricing:new Set(), po:new Set() }, fWho:new Set(), folds:{}, kbHide:false, tSort:{ k:"company", dir:1 },
   saving:0, pending:new Set(), saveErr:"", everSaved:false, dragId:null
 };
 
@@ -663,10 +732,14 @@ function normSettings(j){
     id:String(p.id || ""), name:norm(p.name) || String(p.email), email:lc(p.email), admin:!!p.admin,
     perms:{ create:!!(p.perms && p.perms.create), edit:!!(p.perms && p.perms.edit), delete:!!(p.perms && p.perms.delete) }
   }));
-  const statuses = (Array.isArray(j.statuses) ? j.statuses : []).filter(s => s && norm(s.name)).map(s => ({
-    name:norm(s.name), color:PAL[s.color] ? s.color : "gray", retired:!!s.retired
-  }));
-  return { people:people, statuses:statuses };
+  const opt = s => ({ name:norm(s.name), color:PAL[s.color] ? s.color : "gray", retired:!!s.retired });
+  const statuses = (Array.isArray(j.statuses) ? j.statuses : []).filter(s => s && norm(s.name)).map(opt);   // retired single status, kept as-is
+  const tj = j.tracks && typeof j.tracks === "object" ? j.tracks : {}, tracks = {};
+  TRACKS.forEach(t => {
+    const src = Array.isArray(tj[t.k]) ? tj[t.k] : TRACK_DEFAULTS[t.k].map(d => ({ name:d[0], color:d[1] }));
+    tracks[t.k] = src.filter(s => s && norm(s.name)).map(opt);
+  });
+  return { people:people, statuses:statuses, tracks:tracks };
 }
 async function loadSettings(){
   S.settings = normSettings(null); S.settingsOk = false; S.settingsErr = "";
@@ -756,41 +829,47 @@ function avHtml(k, label, small){
   return '<span class="av' + s + '" style="background:' + c[0] + ';color:' + c[1] + '" title="' + esc(nm) + '">' + esc(initials(nm)) + "</span>";
 }
 
-/* ============================== STATUSES ============================ */
-const statusKey = p => p.status || "";
+/* ============================== STATUS TRACKS ======================= */
 const whoKey = p => p.waitingOn || "";
-function statusMeta(name){
-  const i = S.settings.statuses.findIndex(s => s.name === name);
-  return i < 0 ? null : Object.assign({ i:i }, S.settings.statuses[i]);
+const trackList = t => S.settings.tracks[t] || [];
+const trackLabel = t => (TRACKS.find(x => x.k === t) || {}).label || t;
+function trackMeta(t, name){
+  const L = trackList(t), i = L.findIndex(s => s.name === name);
+  return i < 0 ? null : Object.assign({ i:i }, L[i]);
 }
-function colorOf(name){ if (!name) return NO_STATUS; const m = statusMeta(name); return PAL[(m && m.color) || "gray"]; }
-function statusOrderKeys(keys){
+function colorOf(t, name){ if (!name) return NO_STATUS; const m = trackMeta(t, name); return PAL[(m && m.color) || "gray"]; }
+function trackOrderKeys(t, keys){
   return keys.slice().sort((a, b) => {
-    const ma = statusMeta(a), mb = statusMeta(b);
+    const ma = trackMeta(t, a), mb = trackMeta(t, b);
     const ra = !a ? 3 : ma ? 1 : 2, rb = !b ? 3 : mb ? 1 : 2;
     return ra - rb || (ma && mb ? ma.i - mb.i : String(a).localeCompare(String(b)));
   });
 }
-const statusRank = name => { if (!name) return 9999; const m = statusMeta(name); return m ? m.i : 5000; };
-function statusPill(name, id){
-  const c = colorOf(name);
-  return '<span class="pill"' + (id ? ' id="' + id + '"' : "") + ' style="background:' + c[0] + ";color:" + c[1] + '">' + esc(name || "No status") + "</span>";
+const trackRank = (t, name) => { if (!name) return 9999; const m = trackMeta(t, name); return m ? m.i : 5000; };
+function trackPill(t, name, short){
+  const c = colorOf(t, name);
+  return '<span class="pill" title="' + esc(trackLabel(t) + ": " + (name || "Not set")) + '" style="background:' + c[0] + ";color:" + c[1] + '">' +
+    (short ? "<i>" + esc(short) + "</i>" : "") + esc(name || (short ? "—" : "Not set")) + "</span>";
 }
-function miniBar(counts, total, extra){
-  const keys = statusOrderKeys([...counts.keys()]);
-  const tip = keys.map(k => (k || "No status") + ": " + counts.get(k)).join(" · ");
-  return '<div class="sbar mini ' + (extra || "") + '" title="' + esc(tip) + '">' +
-    keys.map(k => '<i style="width:' + (counts.get(k) / (total || 1) * 100) + "%;background:" + colorOf(k)[2] + '"></i>').join("") + "</div>";
+const tracksHtml = p => '<div class="tps">' + TRACKS.map(t => trackPill(t.k, p[t.k], t.short)).join("") + "</div>";
+function miniBar(t, counts, total){
+  const keys = trackOrderKeys(t, [...counts.keys()]);
+  const tip = trackLabel(t) + " — " + keys.map(k => (k || "Not set") + ": " + counts.get(k)).join(" · ");
+  return '<div class="sbar mini" title="' + esc(tip) + '">' +
+    keys.map(k => '<i style="width:' + (counts.get(k) / (total || 1) * 100) + "%;background:" + colorOf(t, k)[2] + '"></i>').join("") + "</div>";
 }
-function statusOptions(cur){
-  let h = '<option value="">No status</option>';
-  S.settings.statuses.forEach(s => {
+const miniBars = items => '<div class="mbars">' + TRACKS.map(t => miniBar(t.k, countBy(items, p => p[t.k] || ""), items.length)).join("") + "</div>";
+function trackOptions(t, cur){
+  let h = '<option value="">Not set</option>';
+  trackList(t).forEach(s => {
     if (s.retired && s.name !== cur) return;
     h += '<option value="' + esc(s.name) + '"' + (s.name === cur ? " selected" : "") + ">" + esc(s.name) + (s.retired ? " (retired)" : "") + "</option>";
   });
-  if (cur && !statusMeta(cur)) h += '<option value="' + esc(cur) + '" selected>' + esc(cur) + " (not in list)</option>";
+  if (cur && !trackMeta(t, cur)) h += '<option value="' + esc(cur) + '" selected>' + esc(cur) + " (not in list)</option>";
   return h;
 }
+function selStyle(t, v){ const c = colorOf(t, v); return v ? ' style="background:' + c[0] + ";color:" + c[1] + '"' : ""; }
+function paintSel(el, t){ const c = colorOf(t, el.value); el.style.background = el.value ? c[0] : ""; el.style.color = el.value ? c[1] : ""; }
 function whoOptions(p, cur){
   let h = '<option value="">Unassigned</option>';
   const ppl = S.settings.people.slice().sort(byName);
@@ -808,6 +887,8 @@ function fromItem(it){
     id:String(it.id), etag:it.eTag || it["@odata.etag"] || f["@odata.etag"] || "",
     name:norm(f.Title), company:norm(F("Company")), buyer:norm(F("Buyer")), status:norm(F("Status")),
     waitingOn:lc(F("WaitingOn")), waitingOnName:norm(F("WaitingOnName")), waitingSince:String(F("WaitingSince") || "").slice(0, 10),
+    category:norm(F("Category")), projDate:String(F("ProjectDate") || "").slice(0, 10),
+    art:norm(F("ArtStatus")), pricing:norm(F("PricingStatus")), po:norm(F("PoStatus")), writeUp:/^yes$/i.test(norm(F("WriteUp"))),
     nextStep:norm(F("NextStep")), notes:String(F("Notes") || ""),
     styles:(parseJ(F("StylesJson"), []) || []).filter(x => x && (x.s || x.k)),
     history:(parseJ(F("HistoryJson"), []) || []).filter(x => x && x.t),
@@ -831,7 +912,8 @@ function fieldVal(p, k){
   if (k === "styles") return JSON.stringify(p.styles);
   if (k === "history") return JSON.stringify(p.history.slice(-HIST_MAX));
   if (k === "archived") return p.archived ? "Yes" : "";
-  if (k === "waitingSince") return p.waitingSince ? new Date(p.waitingSince + "T12:00:00Z").toISOString() : null;
+  if (k === "writeUp") return p.writeUp ? "Yes" : "";
+  if (k === "waitingSince" || k === "projDate") return p[k] ? new Date(p[k] + "T12:00:00Z").toISOString() : null;
   return p[k] == null ? "" : p[k];
 }
 function touch(p){
@@ -876,7 +958,7 @@ async function flush(p, retried){
 }
 async function mergeServer(p){
   const srv = fromItem(await gf(itemUrl(p.id) + "?$expand=fields($select=" + selClause() + ")"));
-  ["name","company","buyer","status","waitingOn","waitingOnName","waitingSince","nextStep","notes","archived"].forEach(k => { if (!p._dirty.has(k)) p[k] = srv[k]; });
+  ["name","company","buyer","status","category","projDate","art","pricing","po","writeUp","waitingOn","waitingOnName","waitingSince","nextStep","notes","archived"].forEach(k => { if (!p._dirty.has(k)) p[k] = srv[k]; });
   let st = srv.styles.slice();
   (p._ops || []).forEach(op => {
     if (op.a === "add") op.items.forEach(x => { if (!st.some(y => styleId(y) === styleId(x))) st.push(x); });
@@ -919,7 +1001,8 @@ function dupName(name, company, exceptId){
 }
 async function createProject(d){
   const who = d.waitingOn || "";
-  const p0 = { name:d.name, company:d.company, buyer:d.buyer, status:d.status, waitingOn:who,
+  const p0 = { name:d.name, company:d.company, buyer:d.buyer, status:"", category:d.category, projDate:d.projDate,
+    art:d.art, pricing:d.pricing, po:d.po, writeUp:false, waitingOn:who,
     waitingOnName:who ? (who === "buyer" ? "Buyer" + (d.buyer ? " (" + d.buyer + ")" : "") : personName(who)) : "",
     waitingSince:who ? todayIso() : "", nextStep:d.nextStep, notes:"", styles:[], history:[], archived:false };
   p0.history.push({ t:new Date().toISOString(), by:myName(), a:"created", v:[d.company, d.buyer].filter(Boolean).join(" · ") });
@@ -930,6 +1013,13 @@ async function createProject(d){
   const p = fromItem(it);
   S.projects.push(p); S.everSaved = true; setSave();
   return p;
+}
+/* one-value change with a history line: tracks, category, date, write-up */
+function setField(p, k, v){
+  if (p[k] === v) return;
+  const show = x => k === "writeUp" ? (x ? "Yes" : "No") : k === "projDate" ? (fmtDay(x) || "—") : (x || (isTrack(k) ? "Not set" : "—"));
+  addHist(p, k, show(p[k]) + " → " + show(v));
+  p[k] = v; touch(p, k, "history");
 }
 function setWaiting(p, k){
   const before = whoLabel(whoKey(p), p);
@@ -1069,7 +1159,7 @@ async function openLightbox(k, cap){
 
 /* ============================== FILTERING =========================== */
 function hay(p){
-  return lc([p.name, p.company, p.buyer, p.status, whoLabel(p.waitingOn, p), p.nextStep, p.notes]
+  return lc([p.name, p.company, p.buyer, p.category, p.art, p.pricing, p.po, whoLabel(p.waitingOn, p), p.nextStep, p.notes]
     .concat(p.styles.map(s => (s.s || "") + " " + (s.d || ""))).join(" "));
 }
 function baseSet(){
@@ -1078,16 +1168,17 @@ function baseSet(){
     (!toks.length || (h => toks.every(t => h.indexOf(t) >= 0))(hay(p))));
 }
 function applyFilters(set, skip){
-  return set.filter(p => (skip === "status" || !S.fStatus.size || S.fStatus.has(statusKey(p))) &&
+  return set.filter(p => TRACKS.every(t => skip === t.k || !S.fTrack[t.k].size || S.fTrack[t.k].has(p[t.k] || "")) &&
                          (skip === "who" || !S.fWho.size || S.fWho.has(whoKey(p))));
 }
-const filtersOn = () => S.fStatus.size || S.fWho.size || S.q;
-const projSort = (a, b) => statusRank(a.status) - statusRank(b.status) || daysSince(b.waitingSince) - daysSince(a.waitingSince) || a.name.localeCompare(b.name);
+const filtersOn = () => TRACKS.some(t => S.fTrack[t.k].size) || S.fWho.size || S.q;
+const projSort = (a, b) => daysSince(b.waitingSince) - daysSince(a.waitingSince) || a.name.localeCompare(b.name);
+const listName = () => ({ kanban:"Kanban", table:"Table" })[S.listView] || "Dashboard";
 
 /* ============================== RENDER ============================== */
 function render(){
   const v = S.view;
-  $("#head").classList.toggle("hide", !(v === "dash" || v === "kanban"));
+  $("#head").classList.toggle("hide", !(v === "dash" || v === "kanban" || v === "table"));
   $("#gSeg").style.display = v === "dash" ? "" : "none";
   [...$("#vSeg").children].forEach(b => b.classList.toggle("on", b.dataset.v === v));
   [...$("#aSeg").children].forEach(b => b.classList.toggle("on", b.dataset.a === S.arch));
@@ -1098,6 +1189,7 @@ function render(){
   else if (v === "team") renderTeam();
   else if (v === "lists") renderLists();
   else if (v === "kanban") renderKanban();
+  else if (v === "table") renderTable();
   else renderDash();
   observePhotos($("#view"));
   setSave();
@@ -1105,7 +1197,8 @@ function render(){
 function renderDatalists(){
   const opts = vals => [...new Map(vals.filter(Boolean).map(x => [x.toLowerCase(), x])).values()].sort((a, b) => a.localeCompare(b))
     .map(x => '<option value="' + esc(x) + '">').join("");
-  $("#dls").innerHTML = '<datalist id="dlCompany">' + opts(S.projects.map(p => p.company)) + '</datalist><datalist id="dlBuyer">' + opts(S.projects.map(p => p.buyer)) + "</datalist>";
+  $("#dls").innerHTML = '<datalist id="dlCompany">' + opts(S.projects.map(p => p.company)) + '</datalist><datalist id="dlBuyer">' + opts(S.projects.map(p => p.buyer)) + "</datalist>" +
+    '<datalist id="dlCategory">' + opts(S.projects.map(p => p.category).concat(S.tracker.map(r => r.category))) + "</datalist>";
 }
 function bannersHtml(){
   let h = "";
@@ -1113,12 +1206,8 @@ function bannersHtml(){
   if (S.missingCols.length) h += '<div class="banner"><span>The ' + esc(CFG.listProjects) + " list is missing " + esc(S.missingCols.join(", ")) + "." +
     (S.can.admin ? '</span><button class="btn xs" data-act="mkcols">Add missing columns</button>' : " Ask Saul or Judah to add them.</span>") + "</div>";
   if (S.settingsErr) h += '<div class="banner bad"><span>Team and status settings couldn\'t be read, so they\'re locked for now — ' + esc(S.settingsErr) + "</span></div>";
-  if (S.can.admin && S.settingsOk && (S.view === "dash" || S.view === "kanban") && (!S.settings.statuses.length || !S.settings.people.length)){
-    const need = [];
-    if (!S.settings.statuses.length) need.push('your status list under <a href="#" data-act="go" data-v="lists">Lists</a>');
-    if (!S.settings.people.length) need.push('your team under <a href="#" data-act="go" data-v="team">Team</a>');
-    h += '<div class="banner info"><span>Set up: add ' + need.join(" and ") + ".</span></div>";
-  }
+  if (S.can.admin && S.settingsOk && S.view !== "project" && !S.settings.people.length)
+    h += '<div class="banner info"><span>Set up: add your team under <a href="#" data-act="go" data-v="team">Team</a>.</span></div>';
   if (!S.can.edit && S.settingsOk) h += '<div class="banner info"><span>You can view everything. To create or edit projects, ask Saul or Judah to add you.</span></div>';
   return h;
 }
@@ -1126,27 +1215,30 @@ function bannersHtml(){
 /* ---------- dashboard ---------- */
 function renderDash(){
   const base = baseSet(), set = applyFilters(base);
-  let h = bannersHtml() + summaryHtml(base, set);
-  if (!S.projects.length){
-    h += '<div class="card"><div class="empty"><b>No projects yet</b><span>Start one, then add its styles from the Quote Tracker.</span>' +
-      (S.can.create ? '<button class="btn primary" data-act="new">+ New project</button>' : "") + "</div></div>";
-  } else if (!set.length){
-    h += '<div class="card"><div class="empty">Nothing matches.' + (filtersOn() ? '<button class="btn sm" data-act="clearf">Clear filters</button>' : "") + "</div></div>";
-  } else h += groupsHtml(set);
-  $("#view").innerHTML = h;
+  $("#view").innerHTML = bannersHtml() + summaryHtml(base, set) + (emptyHtml(set) || groupsHtml(set));
+}
+function emptyHtml(set){
+  if (!S.projects.length) return '<div class="card"><div class="empty"><b>No projects yet</b><span>Start one, then add its styles from the Quote Tracker.</span>' +
+    (S.can.create ? '<button class="btn primary" data-act="new">+ New project</button>' : "") + "</div></div>";
+  if (!set.length) return '<div class="card"><div class="empty">Nothing matches.' + (filtersOn() ? '<button class="btn sm" data-act="clearf">Clear filters</button>' : "") + "</div></div>";
+  return "";
 }
 function summaryHtml(base, set){
-  const forStatus = applyFilters(base, "status"), forWho = applyFilters(base, "who");
+  const forWho = applyFilters(base, "who");
   const companies = new Set(set.map(p => lc(p.company)).filter(Boolean)).size;
   const buyers = new Set(set.map(p => lc(p.buyer)).filter(Boolean)).size;
   const styles = new Set(); set.forEach(p => p.styles.forEach(s => styles.add(styleId(s))));
   const stale = set.filter(p => p.waitingOn && daysSince(p.waitingSince) >= 7).length;
   const kpi = (k, v, cls) => '<div class="kpi ' + (cls || "") + '"><span class="k">' + k + '</span><span class="v">' + v + "</span></div>";
-  const sc = countBy(forStatus, statusKey), sk = statusOrderKeys([...sc.keys()]), tot = forStatus.length || 1;
-  const bar = sk.map(k => '<i style="width:' + (sc.get(k) / tot * 100) + "%;background:" + colorOf(k)[2] + '" title="' + esc((k || "No status") + ": " + sc.get(k)) + '"></i>').join("");
-  const chip = (cls, act, k, inner, n) => '<button class="lg' + cls + '" data-act="' + act + '" data-k="' + esc(k) + '">' + inner + '<span class="n">' + n + "</span></button>";
-  const lgS = sk.map(k => chip((S.fStatus.has(k) ? " on" : "") + (S.fStatus.size && !S.fStatus.has(k) ? " dim" : ""), "fstatus", k,
-    '<span class="dot" style="background:' + colorOf(k)[2] + '"></span>' + esc(k || "No status"), sc.get(k))).join("");
+  const chip = (cls, act, k, inner, n, t) => '<button class="lg' + cls + '" data-act="' + act + '"' + (t ? ' data-t="' + t + '"' : "") + ' data-k="' + esc(k) + '">' + inner + '<span class="n">' + n + "</span></button>";
+  const trk = TRACKS.map(t => {
+    const fs = S.fTrack[t.k], forT = applyFilters(base, t.k), c = countBy(forT, p => p[t.k] || ""), ks = trackOrderKeys(t.k, [...c.keys()]), tot = forT.length || 1;
+    const bar = ks.map(k => '<i style="width:' + (c.get(k) / tot * 100) + "%;background:" + colorOf(t.k, k)[2] + '" title="' + esc((k || "Not set") + ": " + c.get(k)) + '"></i>').join("");
+    const lg = ks.map(k => chip((fs.has(k) ? " on" : "") + (fs.size && !fs.has(k) ? " dim" : ""), "ftrack", k,
+      '<span class="dot" style="background:' + colorOf(t.k, k)[2] + '"></span>' + esc(k || "Not set"), c.get(k), t.k)).join("");
+    return '<div class="trk"><span class="sum-l">' + esc(t.label) + "</span>" + (forT.length ? '<div class="sbar">' + bar + "</div>" : "") +
+      '<div class="legend">' + (lg || '<span class="hint">No projects</span>') + "</div></div>";
+  }).join("");
   const wc = countBy(forWho, whoKey);
   const wk = [...wc.keys()].sort((a, b) => wc.get(b) - wc.get(a) || whoLabel(a).localeCompare(whoLabel(b)));
   const lgW = wk.map(k => chip((S.fWho.has(k) ? " on" : "") + (S.fWho.size && !S.fWho.has(k) ? " dim" : ""), "fwho", k,
@@ -1154,9 +1246,8 @@ function summaryHtml(base, set){
   return '<div class="card sum">' +
     '<div class="kpis">' + kpi("Projects", set.length) + kpi("Companies", companies) + kpi("Buyers", buyers) + kpi("Styles", styles.size) +
       kpi("Waiting 7+ days", stale, stale ? "warn" : "") + "</div>" +
-    '<div class="sum-row"><span class="sum-l">Status breakdown</span>' + (filtersOn() ? '<a href="#" class="clr" data-act="clearf">Clear filters</a>' : "") + "</div>" +
-    (forStatus.length ? '<div class="sbar">' + bar + "</div>" : "") +
-    '<div class="legend">' + (lgS || '<span class="hint">No projects</span>') + "</div>" +
+    (filtersOn() ? '<div class="sum-row"><a href="#" class="clr" data-act="clearf">Clear filters</a></div>' : "") +
+    '<div class="trk3">' + trk + "</div>" +
     '<div class="sum-row"><span class="sum-l">Waiting on</span></div>' +
     '<div class="legend">' + (lgW || '<span class="hint">No projects</span>') + "</div>" +
   "</div>";
@@ -1173,14 +1264,14 @@ function groupsHtml(set){
   });
   const sortG = (x, y) => (x.label ? 0 : 1) - (y.label ? 0 : 1) || x.label.localeCompare(y.label, undefined, { sensitivity:"base" });
   const n1 = S.group === "company" ? "company" : "buyer", n2 = S.group === "company" ? "buyer" : "company";
-  let h = '<div class="cols-hd"><div>Project</div><div>Status</div><div>Waiting on</div><div>Next step</div>' +
+  let h = '<div class="cols-hd"><div>Project</div><div>Art · Pricing · PO</div><div>Waiting on</div><div>Next step</div>' +
     '<div class="tog"><a href="#" data-act="foldall" data-v="1" title="Expand all">＋</a> <a href="#" data-act="foldall" data-v="0" title="Collapse all">－</a></div></div>';
   [...top.values()].sort(sortG).forEach(g => {
     const fk = S.group + ":" + lc(g.label), open = S.folds[fk] !== false;
     h += '<div class="card grp' + (open ? " open" : "") + '"><div class="grp-hd" data-act="fold" data-k="' + esc(fk) + '">' +
       '<span class="car">▶</span><span class="grp-nm">' + esc(g.label || "(No " + n1 + ")") + "</span>" +
       '<span class="grp-ct">' + plural(g.items.length, "project") + " · " + plural([...g.sub.keys()].filter(Boolean).length, n2) + "</span>" +
-      '<div class="spacer"></div>' + miniBar(countBy(g.items, statusKey), g.items.length) + "</div>";
+      '<div class="spacer"></div>' + miniBars(g.items) + "</div>";
     if (open){
       h += '<div class="grp-bd">';
       [...g.sub.values()].sort(sortG).forEach(b => {
@@ -1207,8 +1298,8 @@ function prowHtml(p){
   const other = S.group === "company" ? "" : p.company;
   return '<div class="prow" data-act="open" data-id="' + p.id + '">' +
     '<div class="pname">' + thumbsHtml(p, 3) + '<div class="tx"><b>' + esc(p.name) + "</b>" +
-      '<span class="sc">' + plural(p.styles.length, "style") + (other ? " · " + esc(other) : "") + (p.archived ? " · archived" : "") + "</span></div></div>" +
-    "<div>" + statusPill(p.status) + "</div>" +
+      '<span class="sc">' + plural(p.styles.length, "style") + (p.category ? " · " + esc(p.category) : "") + (other ? " · " + esc(other) : "") + (p.archived ? " · archived" : "") + "</span></div></div>" +
+    "<div>" + tracksHtml(p) + "</div>" +
     '<div class="wt">' + avHtml(p.waitingOn, null, false) + '<span class="nm' + (p.waitingOn ? "" : " none") + '">' + esc(whoLabel(p.waitingOn, p)) + "</span>" + daysHtml(p) + "</div>" +
     '<div class="nstep' + (p.nextStep ? "" : " none") + '" title="' + esc(p.nextStep) + '">' + esc(p.nextStep || "—") + "</div>" +
     '<div class="upd" title="' + esc("Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "")) + '">' + esc(fmtShort(p.modified)) + "</div>" +
@@ -1229,15 +1320,15 @@ function kanbanCols(set){
   if (bi.length || !S.kbHide) cols.push({ key:"buyer", label:"Buyer (external)", items:bi });
   const none = by.get("") || [];
   if (none.length || !S.kbHide) cols.push({ key:"", label:"Unassigned", items:none });
-  cols.forEach(c => c.items.sort((a, b) => daysSince(b.waitingSince) - daysSince(a.waitingSince) || statusRank(a.status) - statusRank(b.status) || a.name.localeCompare(b.name)));
+  cols.forEach(c => c.items.sort(projSort));
   return cols;
 }
 function kcardHtml(p){
   return '<div class="kcard" data-act="open" data-id="' + p.id + '"' + (S.can.edit ? ' draggable="true"' : "") + ">" +
     '<div class="kc-top"><div style="min-width:0;flex:1"><div class="kc-nm">' + esc(p.name) + "</div>" +
       '<div class="kc-co">' + esc([p.company, p.buyer].filter(Boolean).join(" · ") || "—") + "</div></div>" + (p.styles.length ? thumbsHtml(p, 2, "sm") : "") + "</div>" +
-    (p.nextStep ? '<div class="kc-ns">' + esc(p.nextStep) + "</div>" : "") +
-    '<div class="kc-ft">' + statusPill(p.status) + daysHtml(p) + '<span class="kc-sc">' + plural(p.styles.length, "style") + "</span></div>" +
+    (p.nextStep ? '<div class="kc-ns">' + esc(p.nextStep) + "</div>" : "") + tracksHtml(p) +
+    '<div class="kc-ft">' + daysHtml(p) + '<span class="kc-sc">' + plural(p.styles.length, "style") + "</span></div>" +
   "</div>";
 }
 function renderKanban(){
@@ -1251,7 +1342,7 @@ function renderKanban(){
     cols.forEach(c => {
       h += '<div class="card kcol" data-who="' + esc(c.key || "~none") + '"><div class="kcol-hd">' + avHtml(c.key, c.label) +
         '<span class="nm" title="' + esc(c.label) + '">' + esc(c.label) + '</span><span class="ct">' + c.items.length + "</span></div>" +
-        (c.items.length ? miniBar(countBy(c.items, statusKey), c.items.length) : "") +
+        (c.items.length ? miniBars(c.items) : "") +
         '<div class="kcol-bd">' + (c.items.length ? c.items.map(kcardHtml).join("") : '<div class="kempty">Nothing waiting</div>') + "</div></div>";
     });
     h += "</div>";
@@ -1280,10 +1371,56 @@ function bindKanban(v){
   });
 }
 
+/* ---------- table (the sales sheet layout) ---------- */
+const TCOLS = [
+  { k:"company", label:"Customer" }, { k:"category", label:"Category" }, { k:"buyer", label:"Buyer" }, { k:"projDate", label:"Date" },
+  { k:"name", label:"Project name" }, { k:"art", label:"Art" }, { k:"pricing", label:"Pricing" }, { k:"po", label:"PO status" },
+  { k:"writeUp", label:"Write-up with production" }, { k:"notes", label:"Notes" }, { k:"", label:"Picture" }
+];
+function tblSort(a, b){
+  const k = S.tSort.k, d = S.tSort.dir;
+  let r;
+  if (isTrack(k)) r = trackRank(k, a[k]) - trackRank(k, b[k]);
+  else if (k === "writeUp") r = (a.writeUp ? 0 : 1) - (b.writeUp ? 0 : 1);
+  else {
+    const x = lc(a[k]), y = lc(b[k]);
+    if (!x !== !y) return x ? -1 : 1;                       // blanks last either way
+    r = x.localeCompare(y);
+  }
+  return r * d || lc(a.company).localeCompare(lc(b.company)) || a.name.localeCompare(b.name);
+}
+function trowHtml(p){
+  const dis = S.can.edit ? "" : " disabled", at = k => ' id="t-' + k + "-" + p.id + '" data-act="tset" data-id="' + p.id + '" data-k="' + k + '"';
+  const open = ' data-act="open" data-id="' + p.id + '"';
+  const sel = t => '<select class="tsel"' + at(t) + selStyle(t, p[t]) + dis + ">" + trackOptions(t, p[t]) + "</select>";
+  const s0 = p.styles[0], t0 = s0 && trackerFor(s0);
+  const pic = s0 ? phHtml((t0 && t0.img) || s0.k) + (p.styles.length > 1 ? '<span class="more">+' + (p.styles.length - 1) + "</span>" : "") : '<div class="ph nost" title="No styles yet"></div>';
+  return "<tr>" +
+    '<td class="co">' + esc(p.company || "—") + "</td>" +
+    '<td><input type="text" class="cat" list="dlCategory" autocomplete="off"' + at("category") + ' value="' + esc(p.category) + '"' + dis + "></td>" +
+    '<td class="by">' + esc(p.buyer || "—") + "</td>" +
+    '<td><input type="date" class="dt"' + at("projDate") + ' value="' + esc(p.projDate) + '"' + dis + "></td>" +
+    '<td class="pn"' + open + ">" + esc(p.name) + (p.archived ? ' <span class="tp">Archived</span>' : "") + "</td>" +
+    "<td>" + sel("art") + "</td><td>" + sel("pricing") + "</td><td>" + sel("po") + "</td>" +
+    '<td class="ctr"><input type="checkbox"' + at("writeUp") + (p.writeUp ? " checked" : "") + dis + ' title="Write-up with production done"></td>' +
+    '<td class="nt"' + open + ' title="' + esc(p.notes) + '">' + esc(norm(p.notes) || "—") + "</td>" +
+    '<td class="pic"' + open + '><div class="pic-in">' + pic + "</div></td>" +
+  "</tr>";
+}
+function renderTable(){
+  const base = baseSet(), set = applyFilters(base);
+  const th = TCOLS.map(c => !c.k ? '<th class="nos">' + esc(c.label) + "</th>" :
+    '<th data-act="tsort" data-k="' + c.k + '"' + (S.tSort.k === c.k ? ' class="on"' : "") + ">" + esc(c.label) +
+    (S.tSort.k === c.k ? (S.tSort.dir > 0 ? " ▲" : " ▼") : "") + "</th>").join("");
+  $("#view").innerHTML = bannersHtml() + summaryHtml(base, set) + (emptyHtml(set) ||
+    '<div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr>' + th + "</tr></thead><tbody>" +
+    set.slice().sort(tblSort).map(trowHtml).join("") + "</tbody></table></div></div>");
+}
+
 /* ---------- project page ---------- */
 function openProject(id, noPush){
   const p = byId(id); if (!p) { toast("That project wasn't found — it may have been deleted."); return; }
-  if (S.view === "dash" || S.view === "kanban") S.listView = S.view;
+  if (S.view === "dash" || S.view === "kanban" || S.view === "table") S.listView = S.view;
   S.view = "project"; S.curId = p.id;
   if (!noPush) try { history.pushState({ p:p.id }, "", "?project=" + encodeURIComponent(p.id)); } catch(e){}
   render(); $("#main").scrollTop = 0;
@@ -1311,10 +1448,10 @@ function renderProject(){
     '<div class="hrow"><span class="t">' + esc(fmtStamp(e.t)) + '</span><span class="by">' + esc(e.by) + '</span><span class="a">' + esc(HLAB[e.a] || e.a) +
     '</span><span class="v">' + esc(e.v) + "</span></div>").join("");
   $("#view").innerHTML = bannersHtml() +
-    '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+    '<a class="backlink" href="#" data-act="back">← ' + listName() + "</a>" +
     '<div class="card p-hd">' +
       '<div class="p-top"><input class="p-name" id="fName" size="' + Math.min(48, Math.max(14, p.name.length + 1)) + '" value="' + esc(p.name) + '"' + dis + ' aria-label="Project name">' +
-        statusPill(p.status, "stPill") + (p.archived ? '<span class="pill" style="background:rgba(95,108,125,.14);color:var(--muted)">Archived</span>' : "") +
+        (p.archived ? '<span class="pill" style="background:rgba(95,108,125,.14);color:var(--muted)">Archived</span>' : "") +
         '<div class="spacer"></div>' +
         '<button class="btn sm" data-act="copylink">Copy link</button>' +
         '<button class="btn sm" data-act="archive" data-need="edit">' + (p.archived ? "Unarchive" : "Archive") + "</button>" +
@@ -1322,13 +1459,16 @@ function renderProject(){
       '<div class="p-grid">' +
         '<label class="fld"><span>Company</span><input id="fCompany" list="dlCompany" autocomplete="off" value="' + esc(p.company) + '"' + dis + "></label>" +
         '<label class="fld"><span>Buyer</span><input id="fBuyer" list="dlBuyer" autocomplete="off" value="' + esc(p.buyer) + '"' + dis + "></label>" +
-        '<label class="fld"><span>Status</span><select id="fStatus"' + dis + ">" + statusOptions(p.status) + "</select></label>" +
+        '<label class="fld"><span>Category</span><input id="fCat" list="dlCategory" autocomplete="off" value="' + esc(p.category) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Date</span><input id="fDate" type="date" value="' + esc(p.projDate) + '"' + dis + "></label>" +
+        TRACKS.map(t => '<label class="fld"><span>' + esc(t.label) + '</span><select class="tsel" id="fT-' + t.k + '"' + selStyle(t.k, p[t.k]) + dis + ">" + trackOptions(t.k, p[t.k]) + "</select></label>").join("") +
         '<label class="fld"><span>Waiting on</span><select id="fWho"' + dis + ">" + whoOptions(p, p.waitingOn) + '</select><div class="since" id="fSince">' + esc(sinceText(p)) + "</div></label>" +
-        '<label class="fld w4"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Write-up with production</span><span class="chk"><input type="checkbox" id="fWrite"' + (p.writeUp ? " checked" : "") + dis + "> Done</span></label>" +
+        '<label class="fld w3"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
         '<label class="fld w4"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
       "</div>" +
       '<div class="p-meta">' + esc("Created " + (p.createdBy ? "by " + p.createdBy + " " : "") + fmtDay(String(p.created).slice(0, 10)) +
-        (p.modified ? " · Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "") : "")) + "</div>" +
+        (p.modified ? " · Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "") : "") + (p.status ? " · Earlier status: " + p.status : "")) + "</div>" +
     "</div>" +
     '<div class="card"><div class="card-hd"><h2>Styles · ' + p.styles.length + '</h2><span class="hint">from the Quote Tracker' +
       (tr === "loading" ? " · loading…" : tr === "error" ? " · couldn't load: " + esc(S.trackerErr) : "") + '</span><div class="spacer"></div>' +
@@ -1360,7 +1500,7 @@ function bindProject(p){
     el.addEventListener("focus", () => { if (!S.refocusing) S.orig = { id:el.id, v:p[key] || "" }; });
     el.addEventListener("input", () => { p[key] = el.value; touch(p, key); });
     el.addEventListener("change", () => {
-      const nv = key === "notes" ? el.value : (key === "company" || key === "buyer") ? canonCase(el.value, key) : norm(el.value);
+      const nv = key === "notes" ? el.value : (key === "company" || key === "buyer" || key === "category") ? canonCase(el.value, key) : norm(el.value);
       p[key] = nv; if (key !== "notes") el.value = nv;
       const was = S.orig && S.orig.id === el.id ? S.orig.v : nv;
       if (label && norm(was) !== nv){ addHist(p, key, (norm(was) || "—") + " → " + (nv || "—")); S.orig = { id:el.id, v:nv }; touch(p, key, "history"); }
@@ -1370,7 +1510,11 @@ function bindProject(p){
   };
   field(q("#fCompany"), "company", true);
   field(q("#fBuyer"), "buyer", true);
+  field(q("#fCat"), "category", true);
   field(q("#fNext"), "nextStep", false);
+  q("#fDate").addEventListener("change", e => setField(p, "projDate", e.target.value));
+  q("#fWrite").addEventListener("change", e => setField(p, "writeUp", e.target.checked));
+  TRACKS.forEach(t => { const el = q("#fT-" + t.k); el.addEventListener("change", () => { setField(p, t.k, el.value); paintSel(el, t.k); }); });
   field(q("#fNotes"), "notes", false);
   const nm = q("#fName");
   nm.addEventListener("keydown", e => { if (e.key === "Enter") nm.blur(); if (e.key === "Escape"){ nm.value = p.name; nm.blur(); } });
@@ -1380,12 +1524,6 @@ function bindProject(p){
     const d = dupName(nv, p.company, p.id);
     if (d){ nm.value = p.name; toast("“" + d.name + "” already exists for " + (d.company || "this company") + "."); return; }
     if (nv !== p.name){ addHist(p, "renamed", p.name + " → " + nv); p.name = nv; touch(p, "name", "history"); }
-  });
-  q("#fStatus").addEventListener("change", e => {
-    const nv = e.target.value; if (nv === p.status) return;
-    addHist(p, "status", (p.status || "No status") + " → " + (nv || "No status"));
-    p.status = nv; touch(p, "status", "history");
-    q("#stPill").outerHTML = statusPill(p.status, "stPill");
   });
   q("#fWho").addEventListener("change", e => { setWaiting(p, e.target.value); q("#fSince").textContent = sinceText(p); });
 }
@@ -1469,12 +1607,13 @@ async function pickerAdd(){
 
 /* ---------- new project ---------- */
 let newStyles = [];
+const newSel = t => ({ art:"#nArt", pricing:"#nPricing", po:"#nPo" })[t];
 function openNew(opts){
   if (!S.can.create){ toast("Only selected people can create projects — ask Saul or Judah."); return; }
   newStyles = (opts && opts.styles) || [];
-  ["#nName","#nCompany","#nBuyer","#nNext"].forEach(s => { $(s).value = ""; });
-  const first = S.settings.statuses.find(s => !s.retired);
-  $("#nStatus").innerHTML = statusOptions(first ? first.name : "");
+  ["#nName","#nCompany","#nBuyer","#nCat","#nNext"].forEach(s => { $(s).value = ""; });
+  $("#nDate").value = todayIso();
+  TRACKS.forEach(t => { const el = $(newSel(t.k)); el.innerHTML = trackOptions(t.k, ""); paintSel(el, t.k); el.onchange = () => paintSel(el, t.k); });
   $("#nWho").innerHTML = whoOptions(null, mePerson() ? myEmail() : "");
   $("#nSub").textContent = newStyles.length ? plural(newStyles.length, "style") + " will be added to it." : "You'll add styles from the Quote Tracker next.";
   $("#nErr").textContent = ""; $("#nCreate").disabled = false; $("#nCreate").textContent = "Create project";
@@ -1483,7 +1622,9 @@ function openNew(opts){
 }
 async function doCreate(){
   const d = { name:norm($("#nName").value), company:canonCase($("#nCompany").value, "company"), buyer:canonCase($("#nBuyer").value, "buyer"),
-    status:$("#nStatus").value, waitingOn:$("#nWho").value, nextStep:norm($("#nNext").value) };
+    category:canonCase($("#nCat").value, "category"), projDate:$("#nDate").value,
+    art:$(newSel("art")).value, pricing:$(newSel("pricing")).value, po:$(newSel("po")).value,
+    waitingOn:$("#nWho").value, nextStep:norm($("#nNext").value) };
   if (!d.name){ $("#nErr").textContent = "Give the project a name."; $("#nName").focus(); return; }
   const dup = dupName(d.name, d.company, null);
   if (dup){ $("#nErr").textContent = "“" + dup.name + "” already exists" + (dup.company ? " for " + dup.company : "") + "."; return; }
@@ -1525,11 +1666,11 @@ function renderTeam(){
       '<td class="u">' + (used.get(p.email) || "") + "</td>" +
       "<td>" + (isOwner ? "" : '<button class="icon" data-act="rmperson" data-e="' + esc(p.email) + '" title="Remove from the team">✕</button>') + "</td></tr>";
   }).join("");
-  $("#view").innerHTML = '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+  $("#view").innerHTML = '<a class="backlink" href="#" data-act="back">← ' + listName() + "</a>" +
     (S.settingsErr ? '<div class="banner bad">Settings couldn\'t be read — changes here are locked. ' + esc(S.settingsErr) + "</div>" : "") +
     '<div class="card"><div class="card-hd"><h2>Team & permissions</h2><span class="hint">Changes save automatically</span></div><div class="tm">' +
     '<div class="hint">Everyone with access to the Production site can open the dashboard read-only. People on this list can be picked under <b>Waiting on</b> and get a Kanban column; tick what each one may do. ' +
-      "<b>Create</b> = start projects (includes edit). <b>Edit</b> = change status, waiting on, notes and add styles. <b>Admin</b> = everything, plus this page and Lists.</div>" +
+      "<b>Create</b> = start projects (includes edit). <b>Edit</b> = change art, pricing, PO status, waiting on, notes and add styles. <b>Admin</b> = everything, plus this page and Lists.</div>" +
     (S.settings.people.some(p => p.email === myEmail()) ? "" : '<div class="banner info"><span>You\'re not on the list yet, so nothing can be waiting on you.</span><button class="btn xs" data-act="addme">Add me</button></div>') +
     '<div class="tm-search"><input id="tmQ" placeholder="Search the company directory to add someone… (or type an email)" autocomplete="off"><div class="tm-res" id="tmRes"></div></div>' +
     '<table class="tm-t"><thead><tr><th>Person</th><th>Email</th><th>Admin</th><th>Create</th><th>Edit</th><th>Delete</th><th>Waiting on them</th><th></th></tr></thead><tbody>' +
@@ -1569,48 +1710,51 @@ function addPerson(u){
 /* ---------- lists (admin) ---------- */
 function renderLists(){
   if (!S.can.admin){ S.view = "dash"; return render(); }
-  const used = countBy(S.projects, statusKey), st = S.settings.statuses;
-  const rows = st.map((s, i) => {
-    const n = used.get(s.name) || 0;
-    return '<tr class="' + (s.retired ? "off" : "") + '"><td><div class="sws">' + PAL_ORDER.map(c =>
-        '<button class="sw' + (s.color === c ? " on" : "") + '" data-act="lscol" data-i="' + i + '" data-c="' + c + '" style="background:' + PAL[c][2] + '" title="' + c + '"></button>').join("") + "</div></td>" +
-      '<td><input class="ls-nm" data-i="' + i + '" value="' + esc(s.name) + '"></td>' +
-      "<td>" + statusPill(s.name) + '</td><td class="u">' + n + "</td>" +
-      '<td><button class="icon mv" data-act="lsmv" data-i="' + i + '" data-d="-1" title="Move up"' + (i ? "" : " disabled") + '>▲</button>' +
-        '<button class="icon mv" data-act="lsmv" data-i="' + i + '" data-d="1" title="Move down"' + (i < st.length - 1 ? "" : " disabled") + ">▼</button></td>" +
-      '<td><button class="btn xs" data-act="lsret" data-i="' + i + '">' + (s.retired ? "Restore" : "Retire") + "</button></td>" +
-      "<td>" + (n ? "" : '<button class="icon" data-act="lsdel" data-i="' + i + '" title="Delete">✕</button>') + "</td></tr>";
-  }).join("");
-  const stray = [...used.keys()].filter(k => k && !statusMeta(k));
-  $("#view").innerHTML = '<a class="backlink" href="#" data-act="back">← ' + (S.listView === "kanban" ? "Kanban" : "Dashboard") + "</a>" +
+  let h = '<a class="backlink" href="#" data-act="back">← ' + listName() + "</a>" +
     (S.settingsErr ? '<div class="banner bad">Settings couldn\'t be read — changes here are locked. ' + esc(S.settingsErr) + "</div>" : "") +
-    '<div class="card"><div class="card-hd"><h2>Status list</h2><span class="hint">Changes save automatically</span></div><div class="tm">' +
-    '<div class="hint">The order here is the order on the dashboard, in the status breakdown and in every dropdown. Retire a status to stop it being picked — projects that hold it keep it.</div>' +
-    '<table class="tm-t"><thead><tr><th>Colour</th><th>Status</th><th>Preview</th><th>Projects</th><th>Order</th><th></th><th></th></tr></thead><tbody>' +
-    (rows || '<tr><td colspan="7" class="hint" style="text-align:left">No statuses yet — add your first one below.</td></tr>') + "</tbody></table>" +
-    '<div class="addrow"><input id="lsNew" placeholder="Add a status…" autocomplete="off"><button class="btn sm primary" data-act="lsadd">Add</button></div>' +
-    (stray.length ? '<div class="banner">In use but not on the list: ' + stray.map(k => "<b>" + esc(k) + '</b> <button class="btn xs" data-act="lsadopt" data-k="' + esc(k) + '">Add to list</button>').join(" ") + "</div>" : "") +
-    "</div></div>";
-  $("#lsNew").addEventListener("keydown", e => { if (e.key === "Enter") addStatus(); });
-  $("#view").querySelectorAll(".ls-nm").forEach(inp => inp.addEventListener("change", () => renameStatus(Number(inp.dataset.i), inp)));
+    '<div class="hint">The order here is the order in the breakdowns, the table sort and every dropdown. Retire an option to stop it being picked — projects that hold it keep it.</div>';
+  TRACKS.forEach(t => {
+    const used = countBy(S.projects, p => p[t.k] || ""), st = trackList(t.k), at = ' data-t="' + t.k + '"';
+    const rows = st.map((s, i) => {
+      const n = used.get(s.name) || 0, ai = at + ' data-i="' + i + '"';
+      return '<tr class="' + (s.retired ? "off" : "") + '"><td><div class="sws">' + PAL_ORDER.map(c =>
+          '<button class="sw' + (s.color === c ? " on" : "") + '" data-act="lscol"' + ai + ' data-c="' + c + '" style="background:' + PAL[c][2] + '" title="' + c + '"></button>').join("") + "</div></td>" +
+        '<td><input class="ls-nm"' + ai + ' value="' + esc(s.name) + '"></td>' +
+        "<td>" + trackPill(t.k, s.name) + '</td><td class="u">' + n + "</td>" +
+        '<td><button class="icon mv" data-act="lsmv"' + ai + ' data-d="-1" title="Move up"' + (i ? "" : " disabled") + '>▲</button>' +
+          '<button class="icon mv" data-act="lsmv"' + ai + ' data-d="1" title="Move down"' + (i < st.length - 1 ? "" : " disabled") + ">▼</button></td>" +
+        '<td><button class="btn xs" data-act="lsret"' + ai + ">" + (s.retired ? "Restore" : "Retire") + "</button></td>" +
+        "<td>" + (n ? "" : '<button class="icon" data-act="lsdel"' + ai + ' title="Delete">✕</button>') + "</td></tr>";
+    }).join("");
+    const stray = [...used.keys()].filter(k => k && !trackMeta(t.k, k));
+    h += '<div class="card"><div class="card-hd"><h2>' + esc(t.label) + '</h2><span class="hint">Changes save automatically</span></div><div class="tm">' +
+      '<table class="tm-t"><thead><tr><th>Colour</th><th>Option</th><th>Preview</th><th>Projects</th><th>Order</th><th></th><th></th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="7" class="hint" style="text-align:left">No options yet — add the first one below.</td></tr>') + "</tbody></table>" +
+      '<div class="addrow"><input id="lsNew-' + t.k + '" placeholder="Add an option…" autocomplete="off"><button class="btn sm primary" data-act="lsadd"' + at + ">Add</button></div>" +
+      (stray.length ? '<div class="banner">In use but not on the list: ' + stray.map(k => "<b>" + esc(k) + '</b> <button class="btn xs" data-act="lsadopt"' + at + ' data-k="' + esc(k) + '">Add to list</button>').join(" ") + "</div>" : "") +
+      "</div></div>";
+  });
+  $("#view").innerHTML = h;
+  TRACKS.forEach(t => $("#lsNew-" + t.k).addEventListener("keydown", e => { if (e.key === "Enter") addOption(t.k); }));
+  $("#view").querySelectorAll(".ls-nm").forEach(inp => inp.addEventListener("change", () => renameOption(inp.dataset.t, Number(inp.dataset.i), inp)));
 }
-function addStatus(name){
-  const nv = norm(name != null ? name : $("#lsNew").value);
+function addOption(t, name){
+  const L = trackList(t), nv = norm(name != null ? name : $("#lsNew-" + t).value);
   if (!nv) return;
-  if (S.settings.statuses.some(s => lc(s.name) === lc(nv))){ toast("“" + nv + "” is already on the list."); return; }
-  const usedC = new Set(S.settings.statuses.map(s => s.color));
-  S.settings.statuses.push({ name:nv, color:PAL_ORDER.find(c => !usedC.has(c) && c !== "gray") || "gray", retired:false });
+  if (L.some(s => lc(s.name) === lc(nv))){ toast("“" + nv + "” is already on the list."); return; }
+  const usedC = new Set(L.map(s => s.color));
+  L.push({ name:nv, color:PAL_ORDER.find(c => !usedC.has(c) && c !== "gray") || "gray", retired:false });
   settingsChanged(); renderLists();
-  const inp = $("#lsNew"); if (inp) inp.focus();
+  const inp = $("#lsNew-" + t); if (inp) inp.focus();
 }
-async function renameStatus(i, inp){
-  const s = S.settings.statuses[i], nv = norm(inp.value);
+async function renameOption(t, i, inp){
+  const L = trackList(t), s = L[i], nv = norm(inp.value);
   if (!s || nv === s.name) return;
-  if (!nv || S.settings.statuses.some((x, j) => j !== i && lc(x.name) === lc(nv))){ inp.value = s.name; toast(nv ? "That status already exists." : "A status needs a name."); return; }
-  const hit = S.projects.filter(p => p.status === s.name);
+  if (!nv || L.some((x, j) => j !== i && lc(x.name) === lc(nv))){ inp.value = s.name; toast(nv ? "That option already exists." : "An option needs a name."); return; }
+  const hit = S.projects.filter(p => p[t] === s.name);
   if (hit.length && !await confirmAsk("Rename “" + s.name + "” to “" + nv + "”?", plural(hit.length, "project") + " holding it will be updated too.", "Rename")){ inp.value = s.name; return; }
   const old = s.name; s.name = nv; settingsChanged();
-  hit.forEach(p => { p.status = nv; addHist(p, "statusRename", old + " → " + nv); touch(p, "status", "history"); });
+  hit.forEach(p => { p[t] = nv; addHist(p, "trackRename", trackLabel(t) + ": " + old + " → " + nv); touch(p, t, "history"); });
   renderLists();
 }
 
@@ -1638,9 +1782,10 @@ document.addEventListener("click", async e => {
     case "back": goList(); break;
     case "go": S.view = a.dataset.v; render(); break;
     case "new": openNew(); break;
-    case "fstatus": { const k = a.dataset.k; S.fStatus.has(k) ? S.fStatus.delete(k) : S.fStatus.add(k); render(); break; }
+    case "ftrack": { const f = S.fTrack[a.dataset.t], k = a.dataset.k; if (!f) break; f.has(k) ? f.delete(k) : f.add(k); render(); break; }
+    case "tsort": { const k = a.dataset.k; S.tSort = S.tSort.k === k ? { k:k, dir:-S.tSort.dir } : { k:k, dir:k === "projDate" ? -1 : 1 }; saveUi(); render(); break; }
     case "fwho": { const k = a.dataset.k; S.fWho.has(k) ? S.fWho.delete(k) : S.fWho.add(k); render(); break; }
-    case "clearf": S.fStatus.clear(); S.fWho.clear(); S.q = ""; $("#q").value = ""; render(); break;
+    case "clearf": TRACKS.forEach(t => S.fTrack[t.k].clear()); S.fWho.clear(); S.q = ""; $("#q").value = ""; render(); break;
     case "fold": S.folds[a.dataset.k] = !a.parentElement.classList.contains("open") ? true : false; saveUi(); render(); break;
     case "foldall": $("#view").querySelectorAll(".grp-hd").forEach(x => { S.folds[x.dataset.k] = a.dataset.v === "1"; }); saveUi(); render(); break;
     case "addstyles": if (p) openPicker({ projectId:p.id }); break;
@@ -1681,19 +1826,19 @@ document.addEventListener("click", async e => {
       S.settings.people = S.settings.people.filter(x => x !== pp); settingsChanged(); computeCan(); renderTeam(); break;
     }
     case "addme": addPerson({ id:"", name:myName(), email:myEmail() }); break;
-    case "lsadd": addStatus(); break;
-    case "lsadopt": addStatus(a.dataset.k); break;
-    case "lscol": { const s = S.settings.statuses[Number(a.dataset.i)]; if (s){ s.color = a.dataset.c; settingsChanged(); renderLists(); } break; }
+    case "lsadd": addOption(a.dataset.t); break;
+    case "lsadopt": addOption(a.dataset.t, a.dataset.k); break;
+    case "lscol": { const s = trackList(a.dataset.t)[Number(a.dataset.i)]; if (s){ s.color = a.dataset.c; settingsChanged(); renderLists(); } break; }
     case "lsmv": {
-      const i = Number(a.dataset.i), j = i + Number(a.dataset.d), L = S.settings.statuses;
+      const i = Number(a.dataset.i), j = i + Number(a.dataset.d), L = trackList(a.dataset.t);
       if (j < 0 || j >= L.length) break;
       const t = L[i]; L[i] = L[j]; L[j] = t; settingsChanged(); renderLists(); break;
     }
-    case "lsret": { const s = S.settings.statuses[Number(a.dataset.i)]; if (s){ s.retired = !s.retired; settingsChanged(); renderLists(); } break; }
+    case "lsret": { const s = trackList(a.dataset.t)[Number(a.dataset.i)]; if (s){ s.retired = !s.retired; settingsChanged(); renderLists(); } break; }
     case "lsdel": {
-      const s = S.settings.statuses[Number(a.dataset.i)]; if (!s) break;
-      if (!await confirmAsk("Delete the status “" + s.name + "”?", "No project uses it.", "Delete")) break;
-      S.settings.statuses = S.settings.statuses.filter(x => x !== s); settingsChanged(); renderLists(); break;
+      const t = a.dataset.t, s = trackList(t)[Number(a.dataset.i)]; if (!s) break;
+      if (!await confirmAsk("Delete “" + s.name + "” from " + trackLabel(t) + "?", "No project uses it.", "Delete")) break;
+      S.settings.tracks[t] = trackList(t).filter(x => x !== s); settingsChanged(); renderLists(); break;
     }
     case "mklist": {
       a.disabled = true; a.textContent = "Creating…";
@@ -1717,6 +1862,11 @@ document.addEventListener("click", async e => {
 document.addEventListener("change", e => {
   const a = e.target.closest("[data-act]"); if (!a) return;
   if (a.dataset.act === "kbhide"){ S.kbHide = a.checked; saveUi(); render(); }
+  if (a.dataset.act === "tset"){
+    const p = byId(a.dataset.id), k = a.dataset.k; if (!p || !S.can.edit) return;
+    setField(p, k, k === "writeUp" ? a.checked : k === "category" ? canonCase(a.value, "category") : norm(a.value));
+    renderKeepFocus();
+  }
   if (a.dataset.act === "perm"){
     const pp = S.settings.people.find(x => x.email === a.dataset.e); if (!pp) return;
     if (a.dataset.k === "admin") pp.admin = a.checked; else pp.perms[a.dataset.k] = a.checked;
@@ -1725,10 +1875,11 @@ document.addEventListener("change", e => {
 });
 
 /* ============================== UI PREFS & LINKS ==================== */
-function saveUi(){ ls("sp-ui", JSON.stringify({ view:S.view === "kanban" ? "kanban" : "dash", group:S.group, arch:S.arch, folds:S.folds, kbHide:S.kbHide })); }
+function saveUi(){ ls("sp-ui", JSON.stringify({ view:S.view === "kanban" || S.view === "table" ? S.view : "dash", group:S.group, arch:S.arch, folds:S.folds, kbHide:S.kbHide, tSort:S.tSort })); }
 function restoreUi(){
   const u = parseJ(ls("sp-ui"), null); if (!u) return;
-  if (u.view === "kanban" || u.view === "dash") S.view = S.listView = u.view;
+  if (u.view === "kanban" || u.view === "dash" || u.view === "table") S.view = S.listView = u.view;
+  if (u.tSort && TCOLS.some(c => c.k && c.k === u.tSort.k)) S.tSort = { k:u.tSort.k, dir:u.tSort.dir < 0 ? -1 : 1 };
   if (u.group === "buyer" || u.group === "company") S.group = u.group;
   if (["Active","Archived","All"].indexOf(u.arch) >= 0) S.arch = u.arch;
   if (u.folds && typeof u.folds === "object") S.folds = u.folds;
