@@ -275,6 +275,9 @@ dialog{margin:auto;border:1px solid var(--edge);border-radius:18px;padding:0;max
   box-shadow:var(--shadow);color:var(--ink)}
 dialog::backdrop{background:rgba(22,32,44,.3);backdrop-filter:blur(3px)}
 dialog.wide{max-width:1080px}
+dialog.mid{max-width:760px}
+.hs-list{max-height:65vh;overflow:auto;padding:4px 0 0}
+.empty .btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .dlg-bd{padding:18px;display:flex;flex-direction:column;gap:13px}
 .dlg-t{font-weight:700;font-size:16px}
 .dlg-ft{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap}
@@ -428,6 +431,24 @@ body.ro [data-need=edit],body.nocreate [data-need=create],body.nodel [data-need=
       <button class="btn" id="pkCancel">Cancel</button>
       <button class="btn primary" id="pkAdd">Add</button>
     </div>
+  </div>
+</dialog>
+
+<dialog id="manDlg">
+  <div class="dlg-bd">
+    <div class="dlg-t" id="mTitle">Add a style</div>
+    <div class="hint">For a style that isn't in the Quote Tracker. It's only saved on this project — nothing is added to the tracker.</div>
+    <label class="fld"><span>Style # or name</span><input id="mStyle" autocomplete="off"></label>
+    <label class="fld"><span>Description</span><input id="mDesc" autocomplete="off"></label>
+    <div class="err" id="mErr"></div>
+    <div class="dlg-ft"><button class="btn" id="mCancel">Cancel</button><button class="btn primary" id="mAdd">Add style</button></div>
+  </div>
+</dialog>
+
+<dialog id="histDlg" class="mid">
+  <div class="dlg-bd">
+    <div class="pk-hd"><div class="dlg-t" id="hsTitle">History</div><div class="spacer"></div><button class="btn sm" id="hsClose">Close</button></div>
+    <div class="hist hs-list" id="hsList"></div>
   </div>
 </dialog>
 
@@ -1031,7 +1052,7 @@ function setWaiting(p, k){
 }
 function addStylesTo(p, rows){
   const have = new Set(p.styles.map(styleId)), at = new Date().toISOString();
-  const items = rows.map(r => ({ id:r.id, k:r.img, s:r.style, d:r.desc, at:at, by:myName() })).filter(x => !have.has(styleId(x)));
+  const items = rows.map(r => Object.assign({ id:r.id, k:r.img, s:r.style, d:r.desc, at:at, by:myName() }, r.manual ? { m:1 } : {})).filter(x => !have.has(styleId(x)));
   if (!items.length) return 0;
   p.styles = p.styles.concat(items);
   (p._ops = p._ops || []).push({ a:"add", items:items });
@@ -1441,18 +1462,16 @@ function renderProject(){
   const ro = !S.can.edit, dis = ro ? " disabled" : "";
   const tr = S.trackerState;
   let tiles = "";
-  if (!p.styles.length) tiles = '<div class="empty"><b>No styles yet</b><span>Pick them from the Quote Tracker.</span>' +
-    (S.can.edit ? '<button class="btn primary" data-act="addstyles">+ Add styles</button>' : "") + "</div>";
+  if (!p.styles.length) tiles = '<div class="empty"><b>No styles yet</b><span>Pick them from the Quote Tracker, or add one that isn\'t in it.</span>' +
+    (S.can.edit ? '<div class="btns"><button class="btn primary" data-act="addstyles">+ Add styles</button><button class="btn" data-act="addmanual">+ Add by hand</button></div>' : "") + "</div>";
   else tiles = '<div class="st-grid">' + p.styles.map(s => tileHtml(s)).join("") + "</div>";
-  const hist = p.history.slice().reverse().slice(0, 60).map(e =>
-    '<div class="hrow"><span class="t">' + esc(fmtStamp(e.t)) + '</span><span class="by">' + esc(e.by) + '</span><span class="a">' + esc(HLAB[e.a] || e.a) +
-    '</span><span class="v">' + esc(e.v) + "</span></div>").join("");
   $("#view").innerHTML = bannersHtml() +
     '<a class="backlink" href="#" data-act="back">← ' + listName() + "</a>" +
     '<div class="card p-hd">' +
       '<div class="p-top"><input class="p-name" id="fName" size="' + Math.min(48, Math.max(14, p.name.length + 1)) + '" value="' + esc(p.name) + '"' + dis + ' aria-label="Project name">' +
         (p.archived ? '<span class="pill" style="background:rgba(95,108,125,.14);color:var(--muted)">Archived</span>' : "") +
         '<div class="spacer"></div>' +
+        '<button class="btn sm" data-act="hist">History' + (p.history.length ? " · " + p.history.length : "") + "</button>" +
         '<button class="btn sm" data-act="copylink">Copy link</button>' +
         '<button class="btn sm" data-act="archive" data-need="edit">' + (p.archived ? "Unarchive" : "Archive") + "</button>" +
         '<button class="btn sm del" data-act="delproj" data-need="delete">Delete</button></div>' +
@@ -1462,19 +1481,43 @@ function renderProject(){
         '<label class="fld"><span>Category</span><input id="fCat" list="dlCategory" autocomplete="off" value="' + esc(p.category) + '"' + dis + "></label>" +
         '<label class="fld"><span>Date</span><input id="fDate" type="date" value="' + esc(p.projDate) + '"' + dis + "></label>" +
         TRACKS.map(t => '<label class="fld"><span>' + esc(t.label) + '</span><select class="tsel" id="fT-' + t.k + '"' + selStyle(t.k, p[t.k]) + dis + ">" + trackOptions(t.k, p[t.k]) + "</select></label>").join("") +
-        '<label class="fld"><span>Waiting on</span><select id="fWho"' + dis + ">" + whoOptions(p, p.waitingOn) + '</select><div class="since" id="fSince">' + esc(sinceText(p)) + "</div></label>" +
         '<label class="fld"><span>Write-up with production</span><span class="chk"><input type="checkbox" id="fWrite"' + (p.writeUp ? " checked" : "") + dis + "> Done</span></label>" +
-        '<label class="fld w3"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
-        '<label class="fld w4"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
+        '<label class="fld w4"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Waiting on</span><select id="fWho"' + dis + ">" + whoOptions(p, p.waitingOn) + '</select><div class="since" id="fSince">' + esc(sinceText(p)) + "</div></label>" +
+        '<label class="fld w3"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
       "</div>" +
       '<div class="p-meta">' + esc("Created " + (p.createdBy ? "by " + p.createdBy + " " : "") + fmtDay(String(p.created).slice(0, 10)) +
         (p.modified ? " · Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "") : "") + (p.status ? " · Earlier status: " + p.status : "")) + "</div>" +
     "</div>" +
     '<div class="card"><div class="card-hd"><h2>Styles · ' + p.styles.length + '</h2><span class="hint">from the Quote Tracker' +
       (tr === "loading" ? " · loading…" : tr === "error" ? " · couldn't load: " + esc(S.trackerErr) : "") + '</span><div class="spacer"></div>' +
-      (p.styles.length ? '<button class="btn sm primary" data-act="addstyles" data-need="edit">+ Add styles</button>' : "") + "</div>" + tiles + "</div>" +
-    (hist ? '<div class="card"><div class="card-hd"><h2>History</h2></div><div class="hist">' + hist + "</div></div>" : "");
+      (p.styles.length ? '<button class="btn sm" data-act="addmanual" data-need="edit">+ Add by hand</button><button class="btn sm primary" data-act="addstyles" data-need="edit">+ Add styles</button>' : "") + "</div>" + tiles + "</div>";
   bindProject(p);
+}
+function openHistory(p){
+  const rows = p.history.slice().reverse().map(e =>
+    '<div class="hrow"><span class="t">' + esc(fmtStamp(e.t)) + '</span><span class="by">' + esc(e.by) + '</span><span class="a">' + esc(HLAB[e.a] || e.a) +
+    '</span><span class="v">' + esc(e.v) + "</span></div>").join("");
+  $("#hsTitle").textContent = "History — " + p.name;
+  $("#hsList").innerHTML = rows || '<div class="hint" style="padding:10px 2px">Nothing yet.</div>';
+  $("#histDlg").showModal();
+}
+function openManual(p){
+  if (!S.can.edit){ toast("You can view projects but not change them — ask Saul or Judah for access."); return; }
+  S.manId = p.id;
+  $("#mStyle").value = ""; $("#mDesc").value = ""; $("#mErr").textContent = "";
+  $("#mTitle").textContent = "Add a style to " + p.name;
+  $("#manDlg").showModal(); $("#mStyle").focus();
+}
+function doManual(){
+  const p = byId(S.manId); if (!p) { $("#manDlg").close(); return; }
+  const st = norm($("#mStyle").value), d = norm($("#mDesc").value);
+  if (!st){ $("#mErr").textContent = "Give it a style number or name."; $("#mStyle").focus(); return; }
+  if (p.styles.some(x => !x.id && lc(x.s) === lc(st))){ $("#mErr").textContent = st + " is already in this project."; return; }
+  addStylesTo(p, [{ id:"", img:keyOf(st), style:st, desc:d, manual:true }]);
+  $("#manDlg").close();
+  toast("Added " + st + " to " + p.name);
+  if (S.view === "project" && S.curId === p.id) render(); else openProject(p.id);
 }
 function tileHtml(s){
   const t = trackerFor(s), sid = styleId(s);
@@ -1487,7 +1530,8 @@ function tileHtml(s){
     if (t.sheet) meta.push('<a href="' + esc(CFG.directoryUrl + "?sheet=" + encodeURIComponent(t.sheet)) + '" target="_blank" rel="noopener" title="Open the quote sheet in Quote Directory">' + esc(t.sheet) + " ↗</a>");
     if (t.date) meta.push("<span>Quoted " + esc(fmtDay(t.date)) + "</span>");
     if (t.archived) meta.push('<span class="tp">Archived in tracker</span>');
-  } else if (S.trackerState === "ready") meta.push('<span class="gone">No longer in the Quote Tracker</span>');
+  } else if (s.m) meta.push('<span class="tp">Added by hand</span>' + (s.by ? "<span>" + esc(s.by) + "</span>" : ""));
+  else if (S.trackerState === "ready") meta.push('<span class="gone">No longer in the Quote Tracker</span>');
   return '<div class="st">' + phHtml((t && t.img) || s.k, "zoom", style + (desc ? " — " + desc : "")) +
     '<div class="st-b"><div class="st-s">' + esc(style) + '</div><div class="st-d" title="' + esc(desc) + '">' + esc(desc || "—") + "</div>" +
     '<div class="st-m">' + meta.join("") + "</div></div>" +
@@ -1580,9 +1624,12 @@ function renderPickList(){
       '<div class="c">' + esc(r.brand) + '</div><div class="c">' + esc(r.customer) + '</div><div class="c" title="' + esc(r.stage) + '">' + esc(r.stage) + "</div>" +
       '<div class="c">' + esc(r.sheet) + '</div><div class="c">' + esc(fmtDay(r.date)) + "</div></div>";
   });
-  if (!rows.length) h += '<div class="pk-more">No styles match' + (PK.all ? "" : " — try “Include archived”") + ".</div>";
+  if (!rows.length) h += '<div class="pk-more">No styles match' + (PK.all ? "" : " — try “Include archived”") + "." +
+    (tgt && toks.length ? ' <button class="btn xs" id="pkMan">Add “' + esc(norm(PK.q)) + "” by hand</button>" : "") + "</div>";
   else if (total > rows.length) h += '<div class="pk-more">Showing ' + rows.length + " of " + total + " — keep typing to narrow it down.</div>";
   box.innerHTML = h;
+  const man = $("#pkMan");
+  if (man) man.onclick = e => { e.stopPropagation(); const q0 = norm(PK.q); $("#pickDlg").close(); openManual(tgt); $("#mStyle").value = q0; $("#mDesc").focus(); };
   observePhotos(box);
   pkCount();
 }
@@ -1789,6 +1836,8 @@ document.addEventListener("click", async e => {
     case "fold": S.folds[a.dataset.k] = !a.parentElement.classList.contains("open") ? true : false; saveUi(); render(); break;
     case "foldall": $("#view").querySelectorAll(".grp-hd").forEach(x => { S.folds[x.dataset.k] = a.dataset.v === "1"; }); saveUi(); render(); break;
     case "addstyles": if (p) openPicker({ projectId:p.id }); break;
+    case "addmanual": if (p) openManual(p); break;
+    case "hist": if (p) openHistory(p); break;
     case "zoom": if (a.dataset.k) openLightbox(a.dataset.k, a.dataset.cap); break;
     case "rmstyle": {
       if (!p) break;
@@ -2018,6 +2067,11 @@ document.addEventListener("DOMContentLoaded", () => {
   $("#pkClear").onclick = () => { PK.sel.clear(); renderPickList(); };
   $("#pkCancel").onclick = () => $("#pickDlg").close();
   $("#pkAdd").onclick = pickerAdd;
+  $("#mCancel").onclick = () => $("#manDlg").close();
+  $("#mAdd").onclick = doManual;
+  ["#mStyle", "#mDesc"].forEach(s => $(s).addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); doManual(); } }));
+  $("#hsClose").onclick = () => $("#histDlg").close();
+  $("#histDlg").addEventListener("click", e => { if (e.target.id === "histDlg") $("#histDlg").close(); });
   $("#lbClose").onclick = () => $("#lbDlg").close();
   $("#lbDlg").addEventListener("click", e => { if (e.target.id === "lbDlg") $("#lbDlg").close(); });
   window.addEventListener("popstate", () => {
