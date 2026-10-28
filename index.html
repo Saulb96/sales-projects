@@ -866,6 +866,7 @@ function trackOrderKeys(t, keys){
     return ra - rb || (ma && mb ? ma.i - mb.i : String(a).localeCompare(String(b)));
   });
 }
+const firstStep = t => (trackList(t).find(s => !s.retired) || {}).name || "";
 const trackRank = (t, name) => { if (!name) return 9999; const m = trackMeta(t, name); return m ? m.i : 5000; };
 function trackPill(t, name, short){
   const c = colorOf(t, name);
@@ -1660,7 +1661,7 @@ function openNew(opts){
   newStyles = (opts && opts.styles) || [];
   ["#nName","#nCompany","#nBuyer","#nCat","#nNext"].forEach(s => { $(s).value = ""; });
   $("#nDate").value = todayIso();
-  TRACKS.forEach(t => { const el = $(newSel(t.k)); el.innerHTML = trackOptions(t.k, ""); paintSel(el, t.k); el.onchange = () => paintSel(el, t.k); });
+  TRACKS.forEach(t => { const el = $(newSel(t.k)); el.innerHTML = trackOptions(t.k, firstStep(t.k)); paintSel(el, t.k); el.onchange = () => paintSel(el, t.k); });
   $("#nWho").innerHTML = whoOptions(null, mePerson() ? myEmail() : "");
   $("#nSub").textContent = newStyles.length ? plural(newStyles.length, "style") + " will be added to it." : "You'll add styles from the Quote Tracker next.";
   $("#nErr").textContent = ""; $("#nCreate").disabled = false; $("#nCreate").textContent = "Create project";
