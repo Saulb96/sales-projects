@@ -134,6 +134,8 @@ label.fld>span{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transfo
 .grp.open .grp-hd .car{transform:rotate(90deg)}
 .grp-nm{font-size:15px;font-weight:700}
 .grp-ct{font-size:12px;color:var(--muted)}
+.grp-co{font-size:12.5px;font-weight:600;color:var(--muted);margin-left:-4px}
+.grp-co::before{content:"· ";font-weight:400}
 .grp-bd{border-top:1px solid var(--grid);padding-bottom:4px}
 .sub-hd{display:flex;align-items:center;gap:8px;padding:10px 18px 4px;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .sub-hd b{color:var(--ink);letter-spacing:0;text-transform:none;font-size:12.5px}
@@ -246,6 +248,7 @@ label.fld>span.chk{display:flex;align-items:center;gap:8px;font-size:13px;font-w
 .p-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px 14px}
 .p-grid .w4{grid-column:1/-1}
 .p-grid .w3{grid-column:span 3}
+.p-grid .w2{grid-column:span 2}
 .since{font-size:11px;color:var(--muted)}
 .p-meta{font-size:11.5px;color:var(--muted)}
 .st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding:14px 16px}
@@ -1248,7 +1251,7 @@ function emptyHtml(set){
 function summaryHtml(base, set){
   const forWho = applyFilters(base, "who");
   const companies = new Set(set.map(p => lc(p.company)).filter(Boolean)).size;
-  const buyers = new Set(set.map(p => lc(p.buyer)).filter(Boolean)).size;
+  const buyers = new Set(set.filter(p => p.buyer).map(p => lc(p.buyer) + "|" + lc(p.company))).size;
   const styles = new Set(); set.forEach(p => p.styles.forEach(s => styles.add(styleId(s))));
   const stale = set.filter(p => p.waitingOn && daysSince(p.waitingSince) >= 7).length;
   const kpi = (k, v, cls) => '<div class="kpi ' + (cls || "") + '"><span class="k">' + k + '</span><span class="v">' + v + "</span></div>";
@@ -1274,30 +1277,33 @@ function summaryHtml(base, set){
     '<div class="legend">' + (lgW || '<span class="hint">No projects</span>') + "</div>" +
   "</div>";
 }
+/* by company: one card per company, buyers inside. By buyer: one card per
+   buyer at each customer, so the same name at two customers stays apart. */
 function groupsHtml(set){
-  const top = new Map();
+  const byB = S.group === "buyer", top = new Map();
   set.forEach(p => {
-    const a = S.group === "company" ? p.company : p.buyer, b = S.group === "company" ? p.buyer : p.company;
-    const ka = lc(a), kb = lc(b);
-    if (!top.has(ka)) top.set(ka, { label:a, items:[], sub:new Map() });
+    const ka = byB ? lc(p.buyer) + "|" + lc(p.company) : lc(p.company), kb = lc(p.buyer);
+    if (!top.has(ka)) top.set(ka, { key:ka, label:byB ? p.buyer : p.company, co:p.company, items:[], sub:new Map() });
     const g = top.get(ka); g.items.push(p);
-    if (!g.sub.has(kb)) g.sub.set(kb, { label:b, items:[] });
+    if (!g.sub.has(kb)) g.sub.set(kb, { label:p.buyer, items:[] });
     g.sub.get(kb).items.push(p);
   });
-  const sortG = (x, y) => (x.label ? 0 : 1) - (y.label ? 0 : 1) || x.label.localeCompare(y.label, undefined, { sensitivity:"base" });
-  const n1 = S.group === "company" ? "company" : "buyer", n2 = S.group === "company" ? "buyer" : "company";
+  const cmp = (x, y) => (x ? 0 : 1) - (y ? 0 : 1) || String(x || "").localeCompare(String(y || ""), undefined, { sensitivity:"base" });
+  const sortG = (x, y) => cmp(x.label, y.label) || (byB ? cmp(x.co, y.co) : 0);
   let h = '<div class="cols-hd"><div>Project</div><div>Art · Pricing · PO</div><div>Waiting on</div><div>Next step</div>' +
     '<div class="tog"><a href="#" data-act="foldall" data-v="1" title="Expand all">＋</a> <a href="#" data-act="foldall" data-v="0" title="Collapse all">－</a></div></div>';
   [...top.values()].sort(sortG).forEach(g => {
-    const fk = S.group + ":" + lc(g.label), open = S.folds[fk] !== false;
+    const fk = S.group + ":" + g.key, open = S.folds[fk] !== false;
     h += '<div class="card grp' + (open ? " open" : "") + '"><div class="grp-hd" data-act="fold" data-k="' + esc(fk) + '">' +
-      '<span class="car">▶</span><span class="grp-nm">' + esc(g.label || "(No " + n1 + ")") + "</span>" +
-      '<span class="grp-ct">' + plural(g.items.length, "project") + " · " + plural([...g.sub.keys()].filter(Boolean).length, n2) + "</span>" +
+      '<span class="car">▶</span><span class="grp-nm">' + esc(g.label || (byB ? "(No buyer)" : "(No company)")) + "</span>" +
+      (byB ? '<span class="grp-co">' + esc(g.co || "No company") + "</span>" : "") +
+      '<span class="grp-ct">' + plural(g.items.length, "project") + (byB ? "" : " · " + plural([...g.sub.keys()].filter(Boolean).length, "buyer")) + "</span>" +
       '<div class="spacer"></div>' + miniBars(g.items) + "</div>";
     if (open){
       h += '<div class="grp-bd">';
-      [...g.sub.values()].sort(sortG).forEach(b => {
-        h += '<div class="sub-hd">' + (S.group === "company" ? "Buyer" : "Company") + " <b>" + esc(b.label || "—") + '</b><span class="n">' + b.items.length + "</span></div>";
+      if (byB) g.items.slice().sort(projSort).forEach(p => { h += prowHtml(p); });
+      else [...g.sub.values()].sort(sortG).forEach(b => {
+        h += '<div class="sub-hd">Buyer <b>' + esc(b.label || "—") + '</b><span class="n">' + b.items.length + "</span></div>";
         b.items.slice().sort(projSort).forEach(p => { h += prowHtml(p); });
       });
       h += "</div>";
@@ -1317,10 +1323,9 @@ function daysHtml(p){
   return '<span class="days' + (d >= 14 ? " old" : d >= 7 ? " mid" : "") + '" title="Waiting since ' + esc(fmtDay(p.waitingSince)) + '">' + (d ? d + "d" : "today") + "</span>";
 }
 function prowHtml(p){
-  const other = S.group === "company" ? "" : p.company;
   return '<div class="prow" data-act="open" data-id="' + p.id + '">' +
     '<div class="pname">' + thumbsHtml(p, 3) + '<div class="tx"><b>' + esc(p.name) + "</b>" +
-      '<span class="sc">' + plural(p.styles.length, "style") + (p.category ? " · " + esc(p.category) : "") + (other ? " · " + esc(other) : "") + (p.archived ? " · archived" : "") + "</span></div></div>" +
+      '<span class="sc">' + plural(p.styles.length, "style") + (p.category ? " · " + esc(p.category) : "") + (p.archived ? " · archived" : "") + "</span></div></div>" +
     "<div>" + tracksHtml(p) + "</div>" +
     '<div class="wt">' + avHtml(p.waitingOn, null, false) + '<span class="nm' + (p.waitingOn ? "" : " none") + '">' + esc(whoLabel(p.waitingOn, p)) + "</span>" + daysHtml(p) + "</div>" +
     '<div class="nstep' + (p.nextStep ? "" : " none") + '" title="' + esc(p.nextStep) + '">' + esc(p.nextStep || "—") + "</div>" +
@@ -1483,9 +1488,9 @@ function renderProject(){
         '<label class="fld"><span>Date</span><input id="fDate" type="date" value="' + esc(p.projDate) + '"' + dis + "></label>" +
         TRACKS.map(t => '<label class="fld"><span>' + esc(t.label) + '</span><select class="tsel" id="fT-' + t.k + '"' + selStyle(t.k, p[t.k]) + dis + ">" + trackOptions(t.k, p[t.k]) + "</select></label>").join("") +
         '<label class="fld"><span>Write-up with production</span><span class="chk"><input type="checkbox" id="fWrite"' + (p.writeUp ? " checked" : "") + dis + "> Done</span></label>" +
-        '<label class="fld w4"><span>Next step</span><input id="fNext" autocomplete="off" placeholder="' + (ro ? "" : "What happens next…") + '" value="' + esc(p.nextStep) + '"' + dis + "></label>" +
+        '<label class="fld"><span>Next step</span><textarea id="fNext" rows="3" placeholder="' + (ro ? "" : "What happens next…") + '"' + dis + ">" + esc(p.nextStep) + "</textarea></label>" +
         '<label class="fld"><span>Waiting on</span><select id="fWho"' + dis + ">" + whoOptions(p, p.waitingOn) + '</select><div class="since" id="fSince">' + esc(sinceText(p)) + "</div></label>" +
-        '<label class="fld w3"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
+        '<label class="fld w2"><span>Notes</span><textarea id="fNotes" rows="3"' + dis + ">" + esc(p.notes) + "</textarea></label>" +
       "</div>" +
       '<div class="p-meta">' + esc("Created " + (p.createdBy ? "by " + p.createdBy + " " : "") + fmtDay(String(p.created).slice(0, 10)) +
         (p.modified ? " · Updated " + fmtStamp(p.modified) + (p.modifiedBy ? " by " + p.modifiedBy : "") : "") + (p.status ? " · Earlier status: " + p.status : "")) + "</div>" +
@@ -1543,7 +1548,7 @@ function bindProject(p){
   const v = $("#view"), q = s => v.querySelector(s);
   const field = (el, key, label) => {
     el.addEventListener("focus", () => { if (!S.refocusing) S.orig = { id:el.id, v:p[key] || "" }; });
-    el.addEventListener("input", () => { p[key] = el.value; touch(p, key); });
+    el.addEventListener("input", () => { p[key] = key === "notes" ? el.value : el.value.replace(/[\r\n]+/g, " "); touch(p, key); });
     el.addEventListener("change", () => {
       const nv = key === "notes" ? el.value : (key === "company" || key === "buyer" || key === "category") ? canonCase(el.value, key) : norm(el.value);
       p[key] = nv; if (key !== "notes") el.value = nv;
@@ -1557,6 +1562,7 @@ function bindProject(p){
   field(q("#fBuyer"), "buyer", true);
   field(q("#fCat"), "category", true);
   field(q("#fNext"), "nextStep", false);
+  q("#fNext").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); e.target.blur(); } });   // one line in the list, wraps here
   q("#fDate").addEventListener("change", e => setField(p, "projDate", e.target.value));
   q("#fWrite").addEventListener("change", e => setField(p, "writeUp", e.target.checked));
   TRACKS.forEach(t => { const el = q("#fT-" + t.k); el.addEventListener("change", () => { setField(p, t.k, el.value); paintSel(el, t.k); }); });
